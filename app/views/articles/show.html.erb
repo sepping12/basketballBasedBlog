@@ -41,6 +41,14 @@
     <% end %>
     <%= link_to "Torna agli articoli", articles_path, class: "link-more" %>
   </div>
+
+  <%# <details> è un elemento HTML che si apre e si chiude da solo: niente JavaScript (nel libro: un onclick inline). %>
+  <% if @article.published? %>
+    <details class="friend-box" id="invia-amico">
+      <summary>✉️ Invia questo articolo a un amico</summary>
+      <%= render "articles/notify_friend", article: @article %>   <%# percorso completo: questa vista può essere resa anche da CommentsController %>
+    </details>
+  <% end %>
 </article>
 
 <section class="section section--tint" id="commenti">

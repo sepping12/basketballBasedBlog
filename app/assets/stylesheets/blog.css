@@ -439,6 +439,19 @@ fieldset.field legend { padding: 0; margin-bottom: .45rem; font-weight: 600; fon
 .form trix-toolbar .trix-button { border-bottom-color: var(--line); }
 .form trix-toolbar .trix-button.trix-active { background: var(--orange-soft); }
 
+/* ---------- "Invia a un amico" ---------- */
+.friend-box { margin-top: 1.4rem; padding: 1rem 1.2rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.friend-box summary { cursor: pointer; font-weight: 600; color: var(--orange-dark); }
+.friend-box[open] summary { margin-bottom: 1rem; }
+.form--inline { padding: 0; border: 0; box-shadow: none; background: transparent; }
+
+/* ---------- Suggerimenti ("Lo sapevi?") e riquadri informativi ---------- */
+.tip { margin: 0 0 1.4rem; padding: .9rem 1.1rem; font-size: .95rem; background: var(--orange-soft); border-left: 4px solid var(--orange); border-radius: 10px; }
+.tip-box { margin-top: 1.6rem; }
+.tip-box h2 { font: 400 1.6rem/1 var(--font-display); letter-spacing: .03em; text-transform: uppercase; margin-bottom: .8rem; }
+.tip-box p { margin: 0 0 .7rem; }
+.tip-box form.button_to, .tip-box .button_to { margin-top: .4rem; }
+
 /* ---------- Note sotto i form ---------- */
 .form-note { margin: 1.2rem 0 0; text-align: center; color: var(--muted); font-size: .95rem; }
 

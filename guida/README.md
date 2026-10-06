@@ -10,7 +10,7 @@ L'esercizio è stato eseguito per intero su questo progetto. Ogni file spiega un
 - **Per il lavoro**: le cose che userai davvero nei progetti Rails;
 - **Domande di verifica**: per controllare di aver capito.
 
-> 📘 **Riassunti per capitolo** (corti, con il contesto): [capitoli/capitolo3.md](../capitoli/capitolo3.md) [capitoli/capitolo4.md](../capitoli/capitolo4.md) e [capitoli/capitolo5.md](../capitoli/capitolo5.md) e [capitoli/capitolo6.md](../capitoli/capitolo6.md) e [capitoli/capitolo7.md](../capitoli/capitolo7.md) e [capitoli/capitolo8.md](../capitoli/capitolo8.md) e [capitoli/capitolo9.md](../capitoli/capitolo9.md) e [capitoli/capitolo10.md](../capitoli/capitolo10.md) e [capitoli/capitolo11.md](../capitoli/capitolo11.md). Partendo da lì ottieni il quadro generale; poi approfondisci qui.
+> 📘 **Riassunti per capitolo** (corti, con il contesto): [capitoli/capitolo3.md](../capitoli/capitolo3.md) [capitoli/capitolo4.md](../capitoli/capitolo4.md) e [capitoli/capitolo5.md](../capitoli/capitolo5.md) e [capitoli/capitolo6.md](../capitoli/capitolo6.md) e [capitoli/capitolo7.md](../capitoli/capitolo7.md) e [capitoli/capitolo8.md](../capitoli/capitolo8.md) e [capitoli/capitolo9.md](../capitoli/capitolo9.md) e [capitoli/capitolo10.md](../capitoli/capitolo10.md) e [capitoli/capitolo11.md](../capitoli/capitolo11.md) e [capitoli/capitolo12.md](../capitoli/capitolo12.md). Partendo da lì ottieni il quadro generale; poi approfondisci qui.
 
 ## Il tuo ambiente
 

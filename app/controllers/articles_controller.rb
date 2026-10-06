@@ -1,11 +1,12 @@
 class ArticlesController < ApplicationController
   # Chiunque può leggere; per scrivere, modificare o eliminare bisogna aver fatto il login.
-  before_action :authenticate, except: [:index, :show]
-  before_action :set_article, only: [:show]
+  # "Invia a un amico" è pubblico, come la lettura.
+  before_action :authenticate, except: [:index, :show, :notify_friend]
+  before_action :set_article, only: [:show, :notify_friend]
 
   # GET /articles or /articles.json
   def index
-    @articles = Article.latest_first.includes(:categories).with_rich_text_body.with_attached_cover_image
+    @articles = Article.visible_to(current_user).latest_first.includes(:categories).with_rich_text_body.with_attached_cover_image
   end
 
   # GET /articles/1 or /articles/1.json
@@ -63,10 +64,26 @@ class ArticlesController < ApplicationController
     end
   end
 
+  # POST /articles/1/notify_friend — "Invia a un amico": un lettore consiglia l'articolo per email.
+  def notify_friend
+    nome = params[:name].to_s.gsub(/[[:cntrl:]]/, " ").strip.first(60)       # niente a-capo: è usato nell'oggetto dell'email
+    email = params[:email].to_s.strip
+
+    if !@article.published?
+      redirect_to @article, alert: "Si possono consigliare solo articoli pubblicati."
+    elsif nome.blank? || email.length > 254 || email !~ URI::MailTo::EMAIL_REGEXP
+      redirect_to article_path(@article, anchor: "invia-amico"), alert: "Scrivi il tuo nome e un indirizzo email valido."
+    else
+      NotifierMailer.email_friend(@article, nome, email).deliver_now
+      redirect_to @article, notice: "Messaggio inviato al tuo amico."
+    end
+  end
+
   private
-    # Solo per `show`: le altre azioni cercano l'articolo tra quelli dell'utente loggato.
+    # Per `show` e `notify_friend`: si vedono gli articoli pubblicati e le PROPRIE bozze (altrimenti 404).
+    # Le altre azioni (modifica, elimina…) cercano l'articolo tra quelli dell'utente loggato.
     def set_article
-      @article = Article.find(params[:id])
+      @article = Article.visible_to(current_user).find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

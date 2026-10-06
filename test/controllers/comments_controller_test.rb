@@ -19,7 +19,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
 
   test "chiunque può commentare un articolo pubblicato" do
     assert_difference("@article.comments.count") do
-      assert_output(/We will notify autore@example.com/) { post article_comments_url(@article), params: commento }
+      assert_emails(1) { post article_comments_url(@article), params: commento }
     end
     assert_redirected_to article_path(@article, anchor: "commenti")
     follow_redirect!
@@ -36,7 +36,15 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
     assert_select "textarea[name='comment[body]']", text: /Testo che non si deve perdere/
   end
 
-  test "non si può commentare una bozza" do
+  test "una bozza è invisibile ai visitatori: nemmeno si può commentare (404)" do
+    assert_raises(ActiveRecord::RecordNotFound) { post article_comments_url(@draft), params: commento }
+    assert_no_difference("Comment.count") do
+      assert_raises(ActiveRecord::RecordNotFound) { post article_comments_url(@draft), params: commento }
+    end
+  end
+
+  test "l'autore di una bozza la vede, ma non può commentarla (non è pubblicata)" do
+    log_in_as users(:two)                      # la bozza è dell'utente two
     assert_no_difference("Comment.count") { post article_comments_url(@draft), params: commento }
     assert_response :unprocessable_entity
     assert_select "#error_explanation li", text: "Articolo non è ancora pubblicato"
@@ -79,7 +87,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "l'HTML nei commenti non viene eseguito" do
-    capture_io { @article.comments.create!(name: "<b>Furbo</b>", email: "f@example.com", body: "<script>alert('xss')</script>ciao") }
+    @article.comments.create!(name: "<b>Furbo</b>", email: "f@example.com", body: "<script>alert('xss')</script>ciao")
     get article_url(@article)
     assert_no_match(/<script>alert/, response.body)
     assert_no_match(/<b>Furbo<\/b>/, response.body)
@@ -118,7 +126,7 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
 
   test "create via Ajax: crea il commento e risponde JavaScript che lo aggiunge alla pagina" do
     assert_difference("@article.comments.count") do
-      capture_io { post article_comments_url(@article), params: commento(name: "Via Ajax"), xhr: true }
+      post article_comments_url(@article), params: commento(name: "Via Ajax"), xhr: true
     end
     assert_response :success
     assert_equal "text/javascript", response.media_type
@@ -130,10 +138,8 @@ class CommentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create via Ajax con un testo pieno di caratteri pericolosi non rompe il JavaScript" do
-    capture_io do
-      post article_comments_url(@article),
-           params: commento(body: %q(Virgolette " e ' e </script> e riga\nnuova), name: "<img onerror=x>"), xhr: true
-    end
+    post article_comments_url(@article),
+         params: commento(body: %q(Virgolette " e ' e </script> e riga\nnuova), name: "<img onerror=x>"), xhr: true
     assert_response :success
     assert_no_match(%r{</script>}, response.body)           # escape_javascript trasforma </ in <\/
     assert_no_match(/<img onerror/, response.body)

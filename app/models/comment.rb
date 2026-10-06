@@ -10,8 +10,10 @@ class Comment < ApplicationRecord
     errors.add(:article_id, "non è ancora pubblicato") if article && !article.published?
   end
 
-  # L'email vera arriva nel Capitolo 12: per ora stampiamo soltanto.
+  # Avvisa per email l'autore dell'articolo (NotifierMailer#comment_added).
+  # deliver_now = si invia subito, DENTRO la richiesta web: se il server di posta è lento, rallenta chi commenta.
+  # (Il Capitolo 13, Active Job, lo sposta in background con deliver_later.)
   def email_article_author
-    puts "We will notify #{article.user.email} in Chapter 12" if article.user
+    NotifierMailer.comment_added(self).deliver_now if article.user
   end
 end

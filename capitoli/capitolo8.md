@@ -1,5 +1,7 @@
 # Capitolo 8 — Action Pack avanzato
 
+> 🔄 **Aggiornamento (Capitolo 12)**: le **bozze** (articoli senza data di pubblicazione) sono ora visibili **solo al loro autore**: per gli altri sono una pagina inesistente (404, anche per commentarle), e l'elenco mostra solo gli articoli pubblicati più le proprie bozze. Quando si commenta una bozza altrui la risposta è quindi 404, non più 422.
+
 > 🔄 **Aggiornamento (Capitolo 11)**: il testo dell'articolo è ora un **rich text** (Action Text): la sanificazione dell'HTML che qui è descritta con `simple_format` la fa ora Action Text quando mostra `article.body`. Il resto è invariato.
 
 > 🔄 **Aggiornamento (Capitolo 9)**: il form dei commenti non è più sempre visibile nella pagina dell'articolo: si carica **a richiesta, via Ajax**, e commenti e relativa eliminazione avvengono senza ricaricare la pagina. Le route dei commenti ora includono anche `:new`, e i test sono **102**. Il resto del capitolo (login, filtri, proprietà, escape) è invariato.

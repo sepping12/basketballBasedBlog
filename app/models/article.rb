@@ -5,7 +5,8 @@ class Article < ApplicationRecord
   # il login; ora il controller crea gli articoli con current_user.articles.new.)
   belongs_to :user
   has_and_belongs_to_many :categories
-  has_many :comments
+  # Eliminando l'articolo si eliminano anche i suoi commenti (senza, resterebbero righe orfane nel database).
+  has_many :comments, dependent: :destroy
 
   # Un'immagine di copertina. Active Storage la salva fuori dalla tabella articles
   # (tabelle active_storage_blobs e active_storage_attachments, "polimorfiche": servono per qualsiasi modello).
@@ -27,6 +28,9 @@ class Article < ApplicationRecord
 
   scope :published, -> { where.not(published_at: nil) }
   scope :draft, -> { where(published_at: nil) }
+  # Cosa può vedere un utente: gli articoli pubblicati + le proprie bozze. Un visitatore (nil) vede solo i pubblicati.
+  # Le bozze (es. quelle create via email) non devono essere pubbliche.
+  scope :visible_to, ->(user) { user ? where("articles.published_at IS NOT NULL OR articles.user_id = ?", user.id) : published }
   scope :recent, -> { where('articles.published_at > ?', 1.week.ago.to_date) }
   scope :where_title, -> (term) { where("articles.title LIKE ?", "%#{term}%") }
 

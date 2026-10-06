@@ -31,8 +31,26 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # Segnala gli errori di consegna delle email (nel libro è false: nasconderebbe i problemi SMTP).
+  config.action_mailer.raise_delivery_errors = true
+
+  # I link nelle email (article_url…) hanno bisogno di sapere l'indirizzo del sito.
+  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+
+  # Server SMTP: i dati stanno nelle credentials cifrate (config/credentials.yml.enc), mai in chiaro qui.
+  # Se sono ancora i segnaposto "CAMBIA…", NON si invia nulla: le email si salvano come file in tmp/mails
+  # (e si vedono comunque in anteprima su http://localhost:3000/rails/mailers).
+  smtp = Rails.application.credentials.smtp
+  if smtp && !smtp[:user_name].to_s.include?("CAMBIA")
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: smtp[:address], port: smtp[:port], enable_starttls_auto: true, authentication: :plain,
+      user_name: smtp[:user_name], password: smtp[:password]
+    }
+  else
+    config.action_mailer.delivery_method = :file
+    config.action_mailer.file_settings = { location: Rails.root.join("tmp/mails") }
+  end
 
   config.action_mailer.perform_caching = false
 

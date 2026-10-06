@@ -71,4 +71,11 @@ class ArticleTest < ActiveSupport::TestCase
     assert_equal %w[NBA Tattica], articles(:one).categories.map(&:name)
     assert_includes categories(:tattica).articles, articles(:one)
   end
+
+  test "eliminando un articolo si eliminano anche i suoi commenti (nessuna riga orfana)" do
+    assert comments(:one).article == articles(:one)
+    assert_difference("Comment.count", -1) { articles(:one).destroy }
+    assert_not Comment.exists?(comments(:one).id)
+  end
 end
+

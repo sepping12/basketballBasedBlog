@@ -8,5 +8,13 @@
 </header>
 
 <section class="section container container--narrow">
+  <%# L'indirizzo con cui crei BOZZE scrivendo un'email (Action Mailbox). Personale e segreto: chi lo conosce può creare bozze a tuo nome. %>
+  <aside class="tip">
+    <strong>Lo sapevi?</strong> Puoi creare una <em>bozza</em> anche con un'email: scrivi a
+    <%= mail_to current_user.draft_article_email %> con il titolo nell'oggetto e il testo nel messaggio.
+    Riceverai un'email di conferma con il link per modificarla. L'indirizzo è segreto
+    (<%= link_to "cambialo", edit_user_path(current_user, anchor: "bozze-email") %> se lo hai condiviso).
+  </aside>
+
   <%= render "form", article: @article %>
 </section>

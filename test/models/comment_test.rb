@@ -17,9 +17,10 @@ class CommentTest < ActiveSupport::TestCase
 
   test "si può commentare un articolo pubblicato" do
     comment = nil
-    assert_output(/We will notify autore@example.com in Chapter 12/) do
+    assert_emails 1 do
       comment = articles(:one).comments.create(name: "Dude", email: "dude@example.com", body: "Great!")
     end
     assert comment.persisted?
+    assert_equal ["autore@example.com"], ActionMailer::Base.deliveries.last.to
   end
 end

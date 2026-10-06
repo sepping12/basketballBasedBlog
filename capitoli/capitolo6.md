@@ -1,5 +1,7 @@
 # Capitolo 6 — Active Record avanzato: potenziare i modelli
 
+> 🔄 **Aggiornamento (Capitolo 12)**: il callback `after_create :email_article_author` non stampa più una riga: **invia davvero un'email** (`NotifierMailer.comment_added(self).deliver_now`). Inoltre `has_many :comments` ha ora `dependent: :destroy`: eliminando un articolo si eliminano i suoi commenti.
+
 > 🔄 **Aggiornamento (Capitolo 11)**: `body` non è più una colonna di `articles` (è un rich text): negli esempi di ricerca SQL che usano `body` si usa `excerpt`, e per eliminare articoli si usa `destroy_all` (`delete_all` lascerebbe righe orfane nella tabella del testo).
 
 > 🔄 **Aggiornamento (Capitolo 8)**: con il login, `Article belongs_to :user` è **tornato obbligatorio** (come nel libro) e ora ogni articolo ha un autore. Il resto del capitolo è rimasto com'era; il numero totale di test è ora 92. Dove trovi `optional: true` qui sotto, descrive lo stato *di quel momento*.

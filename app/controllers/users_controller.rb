@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authenticate, only: [:edit, :update]
-  before_action :set_user, only: [:edit, :update]
+  before_action :authenticate, only: [:edit, :update, :regenerate_draft_token]
+  before_action :set_user, only: [:edit, :update, :regenerate_draft_token]
 
   def new
     @user = User.new
@@ -24,6 +24,12 @@ class UsersController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  # POST /users/1/regenerate_draft_token — il vecchio indirizzo smette di funzionare.
+  def regenerate_draft_token
+    @user.regenerate_draft_article_token
+    redirect_to edit_user_path(@user), notice: "Nuovo indirizzo per le bozze creato. Quello vecchio non funziona più."
   end
 
   private

@@ -45,7 +45,7 @@ class CommentsController < ApplicationController
   private
 
   def load_article
-    @article = Article.find(params[:article_id])
+    @article = Article.visible_to(current_user).find(params[:article_id])
   end
 
   def comment_params

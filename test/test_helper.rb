@@ -12,6 +12,9 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
+  # assert_emails, ActionMailer::Base.deliveries… anche nei test di modello.
+  include ActionMailer::TestHelper
+
   # Add more helper methods to be used by all tests here...
 
   # Allega un file di test (test/fixtures/files) come copertina di un articolo.

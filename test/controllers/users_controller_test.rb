@@ -62,4 +62,43 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal "lettore@example.com", users(:two).reload.email
     assert_equal "rubata@example.com", users(:one).reload.email    # ha modificato SE STESSO
   end
+
+  # --- Capitolo 12: l'indirizzo segreto per le bozze (Action Mailbox) ---
+
+  test "ogni nuovo utente riceve un token casuale e unico" do
+    post users_url, params: { user: { email: "nuovo@example.com", password: "secret", password_confirmation: "secret" } }
+    token = User.find_by!(email: "nuovo@example.com").draft_article_token
+    assert_equal 24, token.length
+    assert_not_equal users(:one).draft_article_token, token
+  end
+
+  test "il token è unico: due utenti non possono averlo uguale (indice unique)" do
+    assert_raises(ActiveRecord::RecordNotUnique) do
+      users(:two).update_column(:draft_article_token, users(:one).draft_article_token)
+    end
+  end
+
+  test "la pagina del proprio account mostra l'indirizzo per le bozze e il pulsante per cambiarlo" do
+    log_in_as users(:one)
+    get edit_user_url(users(:one))
+    assert_select "#bozze-email a[href='mailto:#{users(:one).draft_article_email}']"
+    assert_select "#bozze-email form[action='#{regenerate_draft_token_user_path(users(:one))}']"
+  end
+
+  test "rigenerare il token cambia l'indirizzo" do
+    log_in_as users(:one)
+    vecchio = users(:one).draft_article_email
+    post regenerate_draft_token_user_url(users(:one))
+    assert_redirected_to edit_user_path(users(:one))
+    assert_not_equal vecchio, users(:one).reload.draft_article_email
+  end
+
+  test "rigenerare richiede il login, e agisce solo su se stessi (l'id nell'URL è ignorato)" do
+    post regenerate_draft_token_url(users(:one)) rescue nil
+    vecchio_due = users(:two).draft_article_token
+    log_in_as users(:one)
+    post regenerate_draft_token_user_url(users(:two))
+    assert_equal vecchio_due, users(:two).reload.draft_article_token
+  end
 end
+

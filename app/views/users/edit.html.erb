@@ -10,4 +10,13 @@
 
 <section class="section container container--narrow">
   <%= render "form", user: @user %>
+
+  <section class="form tip-box" id="bozze-email">
+    <h2>Il tuo indirizzo per le bozze</h2>
+    <p>Scrivi un'email a questo indirizzo e diventa una bozza di articolo (oggetto = titolo, messaggio = testo):</p>
+    <p><%= mail_to @user.draft_article_email %></p>
+    <p><small>È personale e segreto: chiunque lo conosca può creare bozze a tuo nome. Se lo hai condiviso per sbaglio, creane uno nuovo.</small></p>
+    <%= button_to "Genera un nuovo indirizzo", regenerate_draft_token_user_path(@user), method: :post,
+          class: "btn btn--ghost-dark btn--sm", data: { confirm: "Il vecchio indirizzo smetterà di funzionare. Continuare?" } %>
+  </section>
 </section>

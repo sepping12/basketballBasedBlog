@@ -180,8 +180,9 @@ begin
     irb "visitatore.response.location"                           # nessun redirect: ri-mostra la pagina con gli errori
     bozza = Article.create!(user: User.find_by(email: 'altro8@example.com'), title: 'Bozza 8', body: 'x')
     condividi(:bozza, bozza)
-    irb "visitatore.post(\"/articles/\#{bozza.id}/comments\", params: {comment: {name: 'A', email: 'a@b.it', body: 'x'}})"
-    irb "visitatore.controller.view_assigns['comment'].errors.full_messages"   # nessun commento su un articolo non pubblicato
+    irb "visitatore.post(\"/articles/\#{bozza.id}/comments\", params: {comment: {name: 'A', email: 'a@b.it', body: 'x'}})"   # 404: dal Capitolo 12 una bozza è invisibile ai visitatori
+    irb "altro.post(\"/articles/\#{bozza.id}/comments\", params: {comment: {name: 'A', email: 'a@b.it', body: 'x'}})"       # il suo autore la vede...
+    irb "altro.controller.view_assigns['comment'].errors.full_messages"                                                    # ...ma non si può commentare un articolo non pubblicato
 
     puts "--- L'email dei commentatori non è pubblica:"
     irb "visitatore.get(\"/articles/\#{articolo.id}\"); visitatore.response.body.scan('marco@example.com').size"

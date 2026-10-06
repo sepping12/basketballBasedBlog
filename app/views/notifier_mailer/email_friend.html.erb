@@ -1,0 +1,13 @@
+<p>
+  Il tuo amico <em><%= @sender_name %></em> pensa che questo articolo possa piacerti:
+</p>
+<p style="font-size:20px;margin:16px 0;">
+  <%= link_to @article.title, article_url(@article), style: "color:#c94b0c;font-weight:bold;" %>
+</p>
+<% if @article.excerpt.present? %>
+  <p style="color:#6f655c;"><%= @article.excerpt %></p>
+<% end %>
+<p>
+  <%= link_to "Leggi l'articolo", article_url(@article),
+        style: "display:inline-block;padding:10px 20px;background:#f2631a;color:#ffffff;text-decoration:none;border-radius:999px;font-weight:bold;" %>
+</p>

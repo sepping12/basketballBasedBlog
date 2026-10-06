@@ -1,0 +1,16 @@
+<%# Invio normale (non Ajax): local: true. Riceve notify_friend_article_path (route "member"). %>
+<%= form_with(url: notify_friend_article_path(article), local: true, class: "form form--inline") do |form| %>
+  <div class="field-row">
+    <div class="field">
+      <%= form.label :name, "Il tuo nome" %>
+      <%= form.text_field :name, maxlength: 60, autocomplete: "name" %>
+    </div>
+    <div class="field">
+      <%= form.label :email, "Email del tuo amico" %>
+      <%= form.text_field :email, maxlength: 254, autocomplete: "off", placeholder: "amico@esempio.it" %>
+    </div>
+  </div>
+  <div class="actions">
+    <%= form.submit "Invia", class: "btn btn--primary btn--sm" %>
+  </div>
+<% end %>

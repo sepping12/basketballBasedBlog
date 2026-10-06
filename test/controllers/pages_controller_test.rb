@@ -16,6 +16,6 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
   test "la home mostra gli ultimi articoli" do
     get root_url
-    assert_select ".card", count: Article.count > 3 ? 3 : Article.count
+    assert_select ".card", count: [Article.published.count, 3].min
   end
 end

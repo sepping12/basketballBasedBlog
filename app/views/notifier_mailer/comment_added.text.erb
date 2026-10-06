@@ -1,0 +1,6 @@
+<%= @comment.name %> ha commentato il tuo articolo "<%= @article.title %>":
+
+<%# truncate fa l'escape dell'HTML: in un messaggio di solo testo è sbagliato (l'apostrofo diventerebbe &#39;) %>
+<%= truncate(@comment.body, length: 300, escape: false) %>
+
+Leggi e rispondi: <%= article_url(@article, anchor: "commenti") %>

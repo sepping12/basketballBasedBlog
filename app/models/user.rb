@@ -19,6 +19,10 @@ class User < ApplicationRecord
            dependent: :nullify
   has_many :replies, through: :articles, source: :comments
 
+  # Un token casuale e unico, impostato alla creazione. Aggiunge regenerate_draft_article_token.
+  # Serve a costruire l'indirizzo segreto con cui l'utente crea bozze scrivendo un'email (Action Mailbox).
+  has_secure_token :draft_article_token
+
   before_save :encrypt_new_password
 
   def self.authenticate(email, password)
@@ -28,6 +32,11 @@ class User < ApplicationRecord
 
   def authenticated?(password)
     self.hashed_password == encrypt(password)
+  end
+
+  # L'indirizzo email personale per le bozze: <token>@drafts.example.com
+  def draft_article_email
+    "#{draft_article_token}@#{Rails.configuration.x.drafts_domain}"
   end
 
   protected

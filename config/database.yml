@@ -7,7 +7,7 @@
 default: &default
   adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
+  timeout: 15000      # ms di attesa se il database è occupato (SQLite: un solo scrittore alla volta; con i job in background 5 s a volte non bastano)
 
 development:
   <<: *default

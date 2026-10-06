@@ -1,4 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'from@example.com'
-  layout 'mailer'
+  # Il mittente: cambialo con lo STESSO indirizzo dell'account SMTP (altrimenti molti provider scartano le email).
+  default from: "Fast Break <blog@example.com>"
+  layout "mailer"
 end

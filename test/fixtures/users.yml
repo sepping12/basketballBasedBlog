@@ -1,7 +1,9 @@
 one:
   email: autore@example.com
+  draft_article_token: tokenAutoreUno1234567890
   hashed_password: <%= Digest::SHA1.hexdigest("secret") %>
 
 two:
   email: lettore@example.com
+  draft_article_token: tokenLettoreDue123456789
   hashed_password: <%= Digest::SHA1.hexdigest("secret") %>

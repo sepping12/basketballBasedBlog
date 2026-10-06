@@ -1,0 +1,6 @@
+<p>La tua bozza <strong><%= @article.title %></strong> è stata creata.</p>
+<p>È visibile solo a te finché non la pubblichi. Puoi modificarla qui:</p>
+<p>
+  <%= link_to "Modifica la bozza", edit_article_url(@article),
+        style: "display:inline-block;padding:10px 20px;background:#f2631a;color:#ffffff;text-decoration:none;border-radius:999px;font-weight:bold;" %>
+</p>
