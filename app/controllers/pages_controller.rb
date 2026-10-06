@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   def home
-    @latest = Article.recent.limit(3)
+    @latest = Article.latest_first.limit(3)
     @articles_count = Article.count
   end
 

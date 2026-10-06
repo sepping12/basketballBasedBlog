@@ -1,15 +1,13 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
+# one: pubblicato, con autore. two: bozza (published_at vuoto), senza autore.
 one:
-  title: MyString
-  location: MyString
-  excerpt: MyString
-  body: MyText
-  published_at: 2026-10-01 12:37:02
+  title: Articolo pubblicato
+  location: Milano
+  excerpt: Un estratto
+  body: Testo del primo articolo
+  published_at: 2026-10-01 12:00:00
+  user: one
 
 two:
-  title: MyString
-  location: MyString
-  excerpt: MyString
-  body: MyText
-  published_at: 2026-10-01 12:37:02
+  title: Bozza di prova
+  body: Testo della bozza
+  published_at:

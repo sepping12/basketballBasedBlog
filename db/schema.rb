@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_01_123655) do
+ActiveRecord::Schema.define(version: 2026_10_06_135254) do
 
   create_table "articles", force: :cascade do |t|
     t.string "title"
@@ -20,6 +20,51 @@ ActiveRecord::Schema.define(version: 2026_10_01_123655) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "excerpt"
     t.string "location"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_articles_on_user_id"
   end
 
+  create_table "articles_categories", id: false, force: :cascade do |t|
+    t.integer "article_id", null: false
+    t.integer "category_id", null: false
+    t.index ["article_id", "category_id"], name: "index_articles_categories_on_article_id_and_category_id"
+    t.index ["category_id", "article_id"], name: "index_articles_categories_on_category_id_and_article_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.integer "article_id"
+    t.string "name"
+    t.string "email"
+    t.text "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name"
+    t.date "birthday"
+    t.text "bio"
+    t.string "color"
+    t.string "twitter"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email"
+    t.string "hashed_password"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  add_foreign_key "articles", "users"
+  add_foreign_key "profiles", "users"
 end

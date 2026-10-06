@@ -10,6 +10,8 @@ L'esercizio è stato eseguito per intero su questo progetto. Ogni file spiega un
 - **Per il lavoro**: le cose che userai davvero nei progetti Rails;
 - **Domande di verifica**: per controllare di aver capito.
 
+> 📘 **Riassunti per capitolo** (corti, con il contesto): [capitoli/capitolo3.md](../capitoli/capitolo3.md) [capitoli/capitolo4.md](../capitoli/capitolo4.md) e [capitoli/capitolo5.md](../capitoli/capitolo5.md) e [capitoli/capitolo6.md](../capitoli/capitolo6.md). Partendo da lì ottieni il quadro generale; poi approfondisci qui.
+
 ## Il tuo ambiente
 
 | Strumento | Versione | Nota |

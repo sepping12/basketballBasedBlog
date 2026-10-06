@@ -1,0 +1,30 @@
+# Nomi "umani" di modelli e campi, usati nei messaggi d'errore ("Titolo è obbligatorio").
+en:
+  activerecord:
+    models:
+      article: Articolo
+      user: Utente
+      comment: Commento
+      category: Categoria
+      profile: Profilo
+    attributes:
+      article:
+        title: Titolo
+        body: Testo
+        excerpt: Estratto
+        location: Luogo
+        published_at: Data di pubblicazione
+        user: Utente
+      user:
+        email: Email
+        password: Password
+        password_confirmation: Conferma password
+      comment:
+        article_id: Articolo
+        article: Articolo
+        name: Nome
+        email: Email
+        body: Commento
+      profile:
+        user: Utente
+        name: Nome

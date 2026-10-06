@@ -1,10 +1,23 @@
-# Articoli di esempio per il blog. Sono TESTI DI PROVA: riscrivili a modo tuo
+# Dati di esempio per il blog. Sono TESTI DI PROVA: riscrivili a modo tuo
 # (oppure cancellali da /articles). Si carica con:  bin/rails db:seed
-# È sicuro rilanciarlo: un articolo con lo stesso titolo non viene duplicato.
+# È sicuro rilanciarlo: ciò che esiste già non viene duplicato né sovrascritto.
+# (Il libro usa db:setup per questo; find_or_create_by! evita il problema.)
+
+# Utente di prova (Capitolo 6). NON usare questa password su un sito vero.
+user = User.find_or_create_by!(email: 'mary@example.com') do |u|
+  u.password = 'guessit'
+  u.password_confirmation = 'guessit'
+end
+
+# Le 5 categorie sono i temi del "quintetto" della landing page.
+%w[NBA Serie\ A Tattica Allenamento Storia].each do |name|
+  Category.find_or_create_by!(name: name)
+end
 
 articles = [
   {
     title: "Perché il pick and roll non passa mai di moda",
+    categories: %w[Tattica],
     location: "Milano",
     excerpt: "Un blocco, un taglio, una scelta: la giocata più semplice è ancora la più difficile da difendere.",
     published_at: Time.zone.local(2026, 10, 4, 18, 30),
@@ -20,6 +33,7 @@ articles = [
   },
   {
     title: "Tre fondamentali da allenare ogni settimana",
+    categories: %w[Allenamento],
     location: "Bologna",
     excerpt: "Non serve un'ora di allenamento: bastano pochi minuti ben fatti, sempre sugli stessi gesti.",
     published_at: Time.zone.local(2026, 10, 1, 9, 0),
@@ -35,6 +49,7 @@ articles = [
   },
   {
     title: "Il tiro da tre punti ha cambiato tutto",
+    categories: %w[Storia Tattica],
     location: "Roma",
     excerpt: "Una linea sul parquet ha riscritto il modo di giocare: breve storia di un'idea rivoluzionaria.",
     published_at: Time.zone.local(2026, 9, 26, 20, 15),
@@ -48,6 +63,7 @@ articles = [
   },
   {
     title: "L'ultimo quarto: come si legge una partita punto a punto",
+    categories: %w[Tattica],
     location: "Torino",
     excerpt: "Quando il tabellone dice parità e il tempo scorre, contano le piccole cose.",
     published_at: Time.zone.local(2026, 9, 20, 21, 0),
@@ -62,9 +78,11 @@ articles = [
 ]
 
 articles.each do |attrs|
-  Article.find_or_create_by!(title: attrs[:title]) do |article|
-    article.assign_attributes(attrs)
+  article = Article.find_or_create_by!(title: attrs[:title]) do |a|
+    a.assign_attributes(attrs.except(:categories))
   end
+  article.update!(user: user) if article.user.nil?
+  article.categories = Category.where(name: attrs[:categories]) if article.categories.empty?
 end
 
-puts "Articoli nel database: #{Article.count}"
+puts "Utenti: #{User.count} - Categorie: #{Category.count} - Articoli: #{Article.count}"

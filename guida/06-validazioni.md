@@ -38,7 +38,7 @@ end
 
 **Perché nel modello e non nel controller o nel form?** In Rails le regole sui dati sono responsabilità del **modello**. Così valgono *ovunque* si salvi un `Article`: dal form web, dall'API JSON, dalla console, da un import o da un job in background. Se la regola fosse nel form, l'API JSON la scavalcherebbe.
 
-> 🔄 **Aggiornamento (passo 9)**: il messaggio è stato tradotto: `validates :title, :body, presence: { message: "è obbligatorio" }`, quindi ora l'errore è *"Titolo è obbligatorio"*. Cambia solo il testo, la validazione è la stessa.
+> 🔄 **Aggiornamento (passo 9 e Capitolo 6)**: il messaggio è stato tradotto in `config/locales/errori.yml` (`blank: "è obbligatorio"`), quindi ora l'errore è *"Titolo è obbligatorio"*. Il modello resta `validates :title, :body, presence: true`: cambia solo il testo.
 
 ## 6.3 Il risultato
 

@@ -20,8 +20,8 @@ Questo passo va oltre il libro (Capitolo 3): non c'è nel PDF, è un'estensione 
 | `app/views/articles/{index,show,new,edit,_form}.html.erb` | ridisegnati |
 | `app/helpers/application_helper.rb` | nome del blog, `nav_link`, date in italiano |
 | `app/helpers/articles_helper.rb` | `article_date`, `reading_time` |
-| `app/models/article.rb` | validazioni in italiano + scope `recent` |
-| `config/locales/articles.yml` | nomi "umani" dei campi per i messaggi d'errore |
+| `app/models/article.rb` | scope `latest_first` (poi arricchito nel Capitolo 6) |
+| `config/locales/modelli.yml` e `errori.yml` | nomi "umani" dei campi e messaggi d'errore in italiano (nati come `articles.yml`, poi estesi nel Capitolo 6) |
 | `app/assets/stylesheets/blog.css` | **tutto lo stile** |
 | `app/assets/stylesheets/application.css` | ora è solo il "manifest" che include gli altri CSS |
 | `db/seeds.rb` | 4 articoli di esempio |
@@ -46,7 +46,7 @@ end
 ```ruby
 class PagesController < ApplicationController
   def home
-    @latest = Article.recent.limit(3)    # le ultime 3 per la landing
+    @latest = Article.latest_first.limit(3)    # le ultime 3 per la landing
     @articles_count = Article.count
   end
 
@@ -164,22 +164,24 @@ Il numero di articoli nel hero viene dal controller (`@articles_count`): è un d
 
 > **Come personalizzarla**: i testi stanno tutti in `home.html.erb`. Titolo, sottotitolo, nomi dei 5 temi, descrizioni: sono HTML normale, modificali e salva. Il browser si aggiorna ricaricando la pagina.
 
-## 9.7 Ordinare gli articoli: lo scope `recent`
+## 9.7 Ordinare gli articoli: lo scope `latest_first`
+
+> 🔄 **Aggiornamento (Capitolo 6)**: in questo passo lo scope si chiamava `recent`; il libro usa quel nome per un'altra cosa (gli articoli dell'ultima settimana), quindi è stato rinominato **`latest_first`**. Il codice qui sotto è quello attuale.
 
 ```ruby
 class Article < ApplicationRecord
-  validates :title, :body, presence: { message: "è obbligatorio" }
+  validates :title, :body, presence: true
 
-  scope :recent, -> { order(Arel.sql("COALESCE(published_at, created_at) DESC")) }
+  scope :latest_first, -> { order(Arel.sql("COALESCE(published_at, created_at) DESC")) }
 end
 ```
 
-- Uno **scope** è una query con un nome, riusabile: `Article.recent`, `Article.recent.limit(3)`.
+- Uno **scope** è una query con un nome, riusabile: `Article.latest_first`, `Article.latest_first.limit(3)`.
 - Ordina per `published_at`; se è vuoto (`NULL`) usa `created_at`: lo fa la funzione SQL `COALESCE` ("il primo valore non nullo"). `DESC` = dal più recente.
 - `Arel.sql(...)` dice a Rails "questo SQL scritto a mano è sicuro": serve perché Rails, per prudenza, non accetta SQL grezzo dentro `order`.
-- Nel controller: `@articles = Article.all` è diventato `Article.recent`.
+- Nel controller: `@articles = Article.all` è diventato `Article.latest_first`.
 
-**Per il lavoro**: gli scope sono il modo normale per dare nomi alle query ripetute (`Article.published`, `User.active`). Si possono concatenare: `Article.recent.where(location: "Milano").limit(5)`.
+**Per il lavoro**: gli scope sono il modo normale per dare nomi alle query ripetute (`Article.published`, `User.active`). Si possono concatenare: `Article.latest_first.where(location: "Milano").limit(5)`.
 
 ## 9.8 Tutto in italiano
 
@@ -190,10 +192,10 @@ Tre tecniche, tutte senza installare niente:
 3. **Messaggi d'errore di validazione** (nel modello e nel locale):
 
    ```ruby
-   validates :title, :body, presence: { message: "è obbligatorio" }
+   validates :title, :body, presence: true       # nel modello: invariato, come nel libro
    ```
    ```yaml
-   # config/locales/articles.yml
+   # config/locales/modelli.yml   (nomi dei campi)
    en:
      activerecord:
        attributes:
@@ -201,7 +203,14 @@ Tre tecniche, tutte senza installare niente:
            title: Titolo
            body: Testo
    ```
-   Il nome del campo nel messaggio viene da `human_attribute_name`, che legge i file in `config/locales/`. Risultato: **"Titolo è obbligatorio"** invece di "Title can't be blank".
+   ```yaml
+   # config/locales/errori.yml    (messaggi predefiniti delle validazioni)
+   en:
+     errors:
+       messages:
+         blank: "è obbligatorio"
+   ```
+   Il nome del campo viene da `human_attribute_name`, che legge `config/locales/`; il testo `blank` è il messaggio predefinito di `presence`. Risultato: **"Titolo è obbligatorio"** invece di "Title can't be blank". (Nel passo 9 il messaggio era scritto nel modello con `message:`; nel Capitolo 6 è stato spostato qui, così vale per tutti i modelli.)
 
 > **Perché il file sta sotto `en:` e non `it:`?** La lingua predefinita dell'app è ancora l'inglese (`:en`). Passare a `:it` richiede le traduzioni di tutto (mesi, errori standard...), tipicamente con la gem `rails-i18n`. In un progetto vero con più lingue si fa così; qui sarebbe eccessivo. È una buona domanda da fare a un collega: "il progetto usa i18n?"
 

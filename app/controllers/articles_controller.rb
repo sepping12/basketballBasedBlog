@@ -3,7 +3,7 @@ class ArticlesController < ApplicationController
 
   # GET /articles or /articles.json
   def index
-    @articles = Article.recent
+    @articles = Article.latest_first
   end
 
   # GET /articles/1 or /articles/1.json

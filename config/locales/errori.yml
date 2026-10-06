@@ -1,0 +1,13 @@
+# Messaggi d'errore predefiniti delle validazioni, tradotti in un unico punto.
+# Così nei modelli si scrive `presence: true` e basta, come nel libro.
+en:
+  errors:
+    messages:
+      blank: "è obbligatorio"
+      taken: "è già in uso"
+      invalid: "non è valido"
+      required: "deve esistere"
+      confirmation: "non coincide con %{attribute}"
+      too_short: "è troppo corto (minimo %{count} caratteri)"
+      too_long: "è troppo lungo (massimo %{count} caratteri)"
+      accepted: "deve essere accettato"

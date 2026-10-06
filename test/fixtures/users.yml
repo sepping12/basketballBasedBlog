@@ -1,0 +1,7 @@
+one:
+  email: autore@example.com
+  hashed_password: <%= Digest::SHA1.hexdigest("secret") %>
+
+two:
+  email: lettore@example.com
+  hashed_password: <%= Digest::SHA1.hexdigest("secret") %>
