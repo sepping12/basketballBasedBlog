@@ -1,0 +1,27 @@
+<% content_for :title, "Articoli" %>
+
+<header class="page-head">
+  <div class="container page-head__row">
+    <div>
+      <p class="kicker">Il blog</p>
+      <h1 class="page-head__title">Tutti gli articoli</h1>
+      <p class="page-head__lead"><%= pluralize(@articles.size, "articolo", "articoli") %> dal più recente</p>
+    </div>
+    <%= link_to "Scrivi un articolo", new_article_path, class: "btn btn--primary" %>
+  </div>
+</header>
+
+<section class="section container">
+  <% if @articles.any? %>
+    <div class="grid">
+      <%= render partial: "articles/card", collection: @articles, as: :article %>
+    </div>
+  <% else %>
+    <div class="empty">
+      <%= render "shared/ball", size: 64 %>
+      <h3>Ancora nessun articolo</h3>
+      <p>Il campo è vuoto: scrivi il tuo primo pezzo.</p>
+      <%= link_to "Scrivi un articolo", new_article_path, class: "btn btn--primary" %>
+    </div>
+  <% end %>
+</section>

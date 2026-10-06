@@ -1,0 +1,7 @@
+/*
+ * Manifest di Sprockets: include tutti i file di questa cartella.
+ * Lo stile vero del blog sta in blog.css.
+ *
+ *= require_tree .
+ *= require_self
+ */

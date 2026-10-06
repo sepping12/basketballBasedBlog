@@ -1,0 +1,12 @@
+<%# Pallone da basket in SVG. Uso: render "shared/ball", size: 40 %>
+<svg class="ball" width="<%= local_assigns.fetch(:size, 40) %>" height="<%= local_assigns.fetch(:size, 40) %>" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+  <circle cx="50" cy="50" r="46" fill="#f2631a"/>
+  <path d="M18 24 A46 46 0 0 1 60 5" fill="none" stroke="#ff9a5c" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+  <g fill="none" stroke="#1a1209" stroke-width="3" stroke-linecap="round">
+    <path d="M50 4 V96"/>
+    <path d="M4 50 H96"/>
+    <path d="M16 17 C39 33 39 67 16 83"/>
+    <path d="M84 17 C61 33 61 67 84 83"/>
+    <circle cx="50" cy="50" r="46"/>
+  </g>
+</svg>

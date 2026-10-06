@@ -1,0 +1,44 @@
+<%= form_with(model: article, local: true, class: "form") do |form| %>
+  <% if article.errors.any? %>
+    <div id="error_explanation" role="alert">
+      <h2>Non posso salvare: <%= pluralize(article.errors.count, "problema", "problemi") %></h2>
+      <ul>
+        <% article.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, placeholder: "Es. Perché il pick and roll non passa mai di moda" %>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <%= form.label :location %>
+      <%= form.text_field :location, placeholder: "Es. Milano" %>
+    </div>
+    <div class="field">
+      <%= form.label :published_at %>
+      <%= form.datetime_local_field :published_at %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :excerpt %>
+    <%= form.text_field :excerpt, placeholder: "Una frase che invogli a leggere" %>
+    <small>Compare nelle anteprime e sotto il titolo.</small>
+  </div>
+
+  <div class="field">
+    <%= form.label :body %>
+    <%= form.text_area :body, rows: 14, placeholder: "Racconta la partita... (una riga vuota separa i paragrafi)" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit (article.persisted? ? "Salva le modifiche" : "Pubblica articolo"), class: "btn btn--primary btn--lg" %>
+    <%= link_to "Annulla", (article.persisted? ? article : articles_path), class: "link-more" %>
+  </div>
+<% end %>

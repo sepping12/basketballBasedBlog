@@ -1,0 +1,18 @@
+<%# Card di anteprima di un articolo. Uso: render partial: "articles/card", collection: @articles, as: :article %>
+<article class="card">
+  <%= link_to article, class: "card__cover cover-#{article.id % 4}", tabindex: -1, "aria-hidden": true do %>
+    <%= render "shared/ball", size: 84 %>
+  <% end %>
+  <div class="card__body">
+    <p class="card__meta">
+      <time><%= article_date(article) %></time>
+      <% if article.location.present? %>· <%= article.location %><% end %>
+    </p>
+    <h3 class="card__title"><%= link_to article.title, article %></h3>
+    <p class="card__excerpt"><%= article.excerpt.presence || truncate(article.body, length: 140) %></p>
+    <div class="card__foot">
+      <span><%= reading_time(article) %></span>
+      <%= link_to "Leggi →", article, class: "card__more" %>
+    </div>
+  </div>
+</article>

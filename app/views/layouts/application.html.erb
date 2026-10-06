@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <title><%= content_for?(:title) ? "#{yield(:title)} · #{blog_name}" : "#{blog_name} · #{blog_tagline}" %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="<%= blog_tagline %>">
+    <meta name="theme-color" content="#14110f">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <nav class="nav container" aria-label="Navigazione principale">
+        <%= link_to root_path, class: "brand", "aria-label": "#{blog_name} — home" do %>
+          <%= render "shared/ball", size: 34 %>
+          <span class="brand__name"><%= blog_name %></span>
+        <% end %>
+
+        <input type="checkbox" id="nav-toggle" class="nav__toggle" aria-label="Apri il menu">
+        <label for="nav-toggle" class="nav__burger" aria-hidden="true"><span></span><span></span><span></span></label>
+
+        <div class="nav__menu">
+          <%= nav_link "Home", root_path %>
+          <%= nav_link "Articoli", articles_path, match: "/articles" %>
+          <%= nav_link "Chi sono", about_path %>
+          <%= link_to "Scrivi", new_article_path, class: "btn btn--primary btn--sm" %>
+        </div>
+      </nav>
+    </header>
+
+    <% if notice.present? %>
+      <div class="toast" role="status"><%= notice %></div>
+    <% end %>
+
+    <main>
+      <%= yield %>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer__inner">
+        <div class="footer__brand">
+          <%= render "shared/ball", size: 28 %>
+          <div>
+            <strong><%= blog_name %></strong>
+            <p><%= blog_tagline %></p>
+          </div>
+        </div>
+        <div class="footer__links">
+          <%= link_to "Home", root_path %>
+          <%= link_to "Articoli", articles_path %>
+          <%= link_to "Chi sono", about_path %>
+          <%= link_to "Scrivi un articolo", new_article_path %>
+        </div>
+        <p class="footer__copy">© <%= Date.current.year %> <%= blog_name %> · Fatto con Ruby on Rails</p>
+      </div>
+    </footer>
+  </body>
+</html>

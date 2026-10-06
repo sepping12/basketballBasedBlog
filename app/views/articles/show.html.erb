@@ -1,0 +1,30 @@
+<% content_for :title, @article.title %>
+
+<header class="page-head page-head--article">
+  <div class="container container--narrow">
+    <%= link_to "← Tutti gli articoli", articles_path, class: "back-link" %>
+    <h1 class="page-head__title"><%= @article.title %></h1>
+    <p class="meta">
+      <time><%= article_date(@article) %></time>
+      <% if @article.location.present? %><span>·</span> <span><%= @article.location %></span><% end %>
+      <span>·</span> <span><%= reading_time(@article) %></span>
+    </p>
+    <% if @article.excerpt.present? %>
+      <p class="page-head__lead"><%= @article.excerpt %></p>
+    <% end %>
+  </div>
+</header>
+
+<article class="section container container--narrow">
+  <div class="prose">
+    <%= simple_format(@article.body) %>
+  </div>
+
+  <div class="article-actions">
+    <%= link_to "Modifica", edit_article_path(@article), class: "btn btn--ghost-dark" %>
+    <%= link_to "Elimina", @article, method: :delete,
+          data: { confirm: "Sicuro di voler eliminare questo articolo?" },
+          class: "btn btn--danger" %>
+    <%= link_to "Torna agli articoli", articles_path, class: "link-more" %>
+  </div>
+</article>

@@ -1,0 +1,42 @@
+<% content_for :title, "Chi sono" %>
+
+<%# Questa pagina è un testo di partenza: riscrivilo con la tua storia. %>
+<header class="page-head">
+  <div class="container">
+    <p class="kicker">Chi sono</p>
+    <h1 class="page-head__title">Un appassionato col pallone in mano</h1>
+    <p class="page-head__lead">Gioco, guardo e studio basket. Questo blog è il posto dove metto in ordine le idee.</p>
+  </div>
+</header>
+
+<section class="section container about">
+  <div class="about__main prose">
+    <h2>Perché il basket</h2>
+    <p>
+      Per me il basket è ritmo: il rumore della palla sul parquet, il cambio di direzione,
+      l'ultimo possesso con il punteggio in parità. È uno sport in cui un singolo
+      passaggio può cambiare tutto, e mi affascina capire perché.
+    </p>
+    <h2>Cosa trovi in questo blog</h2>
+    <p>
+      Articoli su partite e tattica, riflessioni sui fondamentali, un po' di storia del gioco
+      e tutto quello che imparo mentre costruisco anche questo sito, scritto con
+      Ruby on Rails.
+    </p>
+    <h2>Scrivimi</h2>
+    <p>Hai un'opinione diversa dalla mia? Meglio. Il basket è bello anche perché se ne discute.</p>
+  </div>
+
+  <aside class="about__side">
+    <div class="player-card">
+      <%= render "shared/ball", size: 72 %>
+      <h3>Scheda giocatore</h3>
+      <dl>
+        <div><dt>Ruolo</dt><dd>Appassionato</dd></div>
+        <div><dt>Squadra del cuore</dt><dd>Da aggiungere</dd></div>
+        <div><dt>Giocatore preferito</dt><dd>Da aggiungere</dd></div>
+        <div><dt>Quintetto di temi</dt><dd>NBA · Serie A · Tattica · Allenamento · Storia</dd></div>
+      </dl>
+    </div>
+  </aside>
+</section>

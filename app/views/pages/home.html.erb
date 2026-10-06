@@ -1,0 +1,106 @@
+<% content_for :title, blog_tagline %>
+
+<section class="hero">
+  <svg class="hero__court" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="3">
+      <rect x="20" y="20" width="760" height="460" rx="6"/>
+      <path d="M400 20 V480"/>
+      <circle cx="400" cy="250" r="62"/>
+      <g id="half">
+        <rect x="20" y="170" width="190" height="160"/>
+        <circle cx="210" cy="250" r="62"/>
+        <path d="M20 60 H140 A240 240 0 0 1 140 440 H20"/>
+        <circle cx="72" cy="250" r="10"/>
+        <path d="M52 220 V280"/>
+      </g>
+      <g transform="translate(800 0) scale(-1 1)">
+        <rect x="20" y="170" width="190" height="160"/>
+        <circle cx="210" cy="250" r="62"/>
+        <path d="M20 60 H140 A240 240 0 0 1 140 440 H20"/>
+        <circle cx="72" cy="250" r="10"/>
+        <path d="M52 220 V280"/>
+      </g>
+    </g>
+  </svg>
+
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <p class="kicker">Il blog di basket</p>
+      <h1 class="hero__title">
+        Palla a due.<br>
+        <span class="hero__accent">Storie, tattica</span><br>
+        e passione.
+      </h1>
+      <p class="hero__lead">
+        Analisi delle partite, fondamentali da allenare, storia del gioco
+        e opinioni senza filtri. Tutto quello che mi passa per la testa
+        tra un allenamento e una partita.
+      </p>
+      <div class="hero__actions">
+        <%= link_to "Leggi gli articoli", articles_path, class: "btn btn--primary btn--lg" %>
+        <%= link_to "Chi sono", about_path, class: "btn btn--ghost btn--lg" %>
+      </div>
+      <dl class="hero__stats">
+        <div><dt><%= @articles_count %></dt><dd>articoli pubblicati</dd></div>
+        <div><dt>5</dt><dd>temi nel quintetto</dd></div>
+        <div><dt>∞</dt><dd>voglia di giocare</dd></div>
+      </dl>
+    </div>
+
+    <div class="hero__visual" aria-hidden="true">
+      <div class="bounce">
+        <%= render "shared/ball", size: 260 %>
+      </div>
+      <div class="bounce__shadow"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section container">
+  <header class="section__head">
+    <p class="kicker kicker--dark">Il quintetto</p>
+    <h2 class="section__title">Di cosa si parla qui</h2>
+  </header>
+  <ol class="five">
+    <li><span class="five__num">1</span><h3>NBA</h3><p>Le partite, i protagonisti, le storie che fanno rumore oltreoceano.</p></li>
+    <li><span class="five__num">2</span><h3>Serie A</h3><p>Il basket di casa nostra, dal palazzetto sotto casa ai playoff.</p></li>
+    <li><span class="five__num">3</span><h3>Tattica</h3><p>Pick and roll, difese a zona, letture: come si vince davvero.</p></li>
+    <li><span class="five__num">4</span><h3>Allenamento</h3><p>Fondamentali ed esercizi da provare al campetto.</p></li>
+    <li><span class="five__num">5</span><h3>Storia</h3><p>Regole, leggende e momenti che hanno cambiato il gioco.</p></li>
+  </ol>
+</section>
+
+<section class="section section--tint">
+  <div class="container">
+    <header class="section__head section__head--row">
+      <div>
+        <p class="kicker kicker--dark">Ultimi articoli</p>
+        <h2 class="section__title">Dal parquet</h2>
+      </div>
+      <%= link_to "Vedi tutti →", articles_path, class: "link-more" %>
+    </header>
+
+    <% if @latest.any? %>
+      <div class="grid">
+        <%= render partial: "articles/card", collection: @latest, as: :article %>
+      </div>
+    <% else %>
+      <div class="empty">
+        <%= render "shared/ball", size: 64 %>
+        <h3>Ancora nessun articolo</h3>
+        <p>Il campo è vuoto: scrivi il tuo primo pezzo.</p>
+        <%= link_to "Scrivi un articolo", new_article_path, class: "btn btn--primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="container cta__inner">
+    <div>
+      <h2>Hai una partita da raccontare?</h2>
+      <p>Scrivi un nuovo articolo: titolo, estratto e racconto. Il resto lo fa il blog.</p>
+    </div>
+    <%= link_to "Scrivi un articolo", new_article_path, class: "btn btn--dark btn--lg" %>
+  </div>
+</section>

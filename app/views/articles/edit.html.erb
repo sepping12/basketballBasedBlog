@@ -1,0 +1,12 @@
+<% content_for :title, "Modifica articolo" %>
+
+<header class="page-head">
+  <div class="container">
+    <p class="kicker">Modifica</p>
+    <h1 class="page-head__title"><%= @article.title_was.presence || "Articolo" %></h1>
+  </div>
+</header>
+
+<section class="section container container--narrow">
+  <%= render "form", article: @article %>
+</section>
