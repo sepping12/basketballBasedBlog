@@ -9,7 +9,7 @@ class DraftArticlesMailbox < ApplicationMailbox
     # Nessun published_at: è una BOZZA (visibile solo all'autore).
 
     if articolo.save
-      DraftArticlesMailer.created(mail.from, articolo).deliver_now             # conferma, con il link per modificarla
+      DraftArticlesMailer.created(mail.from, articolo).deliver_later          # conferma, con il link per modificarla
     else
       # Il libro usa create!: se manca l'oggetto l'eccezione fa fallire l'elaborazione. Qui si risponde al mittente.
       bounce_with DraftArticlesMailer.invalid_draft(mail.from, articolo.errors.full_messages)

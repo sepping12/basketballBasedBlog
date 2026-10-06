@@ -423,6 +423,13 @@ class ArticlesNotifyFriendTest < ActionDispatch::IntegrationTest
     assert_select "details.friend-box[open]", count: 0
   end
 
+  test "l'invio è IN BACKGROUND: la richiesta accoda un job, non consegna nulla da sola" do
+    assert_enqueued_emails(1) { invia }
+    assert_emails(0) { }                               # nessuna consegna finché il job non gira
+    assert_enqueued_with(job: ApplicationMailDeliveryJob, queue: "mailers")
+    assert_empty ActionMailer::Base.deliveries
+  end
+
   test "è pubblico: un visitatore non loggato può consigliare un articolo" do
     assert_emails(1) { invia }
     assert_redirected_to article_url(@article)
@@ -484,7 +491,7 @@ class ArticlesNotifyFriendTest < ActionDispatch::IntegrationTest
 
   test "l'allegato: con una copertina l'email porta l'immagine" do
     attach_cover(@article).save!
-    invia
+    perform_enqueued_jobs { invia }          # con deliver_later l'email esce solo quando il job gira
     assert_equal ["copertina.png"], ActionMailer::Base.deliveries.last.attachments.map(&:filename)
   end
 

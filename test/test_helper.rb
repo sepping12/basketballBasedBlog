@@ -15,6 +15,10 @@ class ActiveSupport::TestCase
   # assert_emails, ActionMailer::Base.deliveries… anche nei test di modello.
   include ActionMailer::TestHelper
 
+  # Le email "consegnate" nei test (delivery_method :test) si accumulano in ActionMailer::Base.deliveries
+  # e restano tra un test e l'altro: si svuota prima di ognuno, così `deliveries.last` è sempre del test in corso.
+  setup { ActionMailer::Base.deliveries.clear }
+
   # Add more helper methods to be used by all tests here...
 
   # Allega un file di test (test/fixtures/files) come copertina di un articolo.

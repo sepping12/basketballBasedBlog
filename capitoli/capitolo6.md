@@ -1,5 +1,7 @@
 # Capitolo 6 — Active Record avanzato: potenziare i modelli
 
+> 🔄 **Aggiornamento (Capitolo 13)**: il callback dell'email è ora `after_create_commit` e usa `deliver_later` (in background, con Active Job).
+
 > 🔄 **Aggiornamento (Capitolo 12)**: il callback `after_create :email_article_author` non stampa più una riga: **invia davvero un'email** (`NotifierMailer.comment_added(self).deliver_now`). Inoltre `has_many :comments` ha ora `dependent: :destroy`: eliminando un articolo si eliminano i suoi commenti.
 
 > 🔄 **Aggiornamento (Capitolo 11)**: `body` non è più una colonna di `articles` (è un rich text): negli esempi di ricerca SQL che usano `body` si usa `excerpt`, e per eliminare articoli si usa `destroy_all` (`delete_all` lascerebbe righe orfane nella tabella del testo).

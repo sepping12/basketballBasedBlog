@@ -74,7 +74,9 @@ class ArticlesController < ApplicationController
     elsif nome.blank? || email.length > 254 || email !~ URI::MailTo::EMAIL_REGEXP
       redirect_to article_path(@article, anchor: "invia-amico"), alert: "Scrivi il tuo nome e un indirizzo email valido."
     else
-      NotifierMailer.email_friend(@article, nome, email).deliver_now
+      # deliver_later: l'invio va in un job in background, la risposta parte subito (Capitolo 13).
+      # Al job si passano l'articolo (serializzato come GlobalID) e due stringhe: niente oggetti "pesanti".
+      NotifierMailer.email_friend(@article, nome, email).deliver_later
       redirect_to @article, notice: "Messaggio inviato al tuo amico."
     end
   end

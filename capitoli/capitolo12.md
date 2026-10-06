@@ -26,6 +26,8 @@
 | **Mailbox** (`DraftArticlesMailbox`) | un controller **per le email in arrivo** |
 | **`routing`** in `ApplicationMailbox` | `routes.rb` |
 
+> 🔄 **Aggiornamento (Capitolo 13)**: dove qui si legge `deliver_now`, il codice ora usa **`deliver_later`** (le email partono da un job in background) e il callback del commento è `after_create_commit`. Il messaggio "Messaggio inviato" vuol dire "messo in coda". Vedi [capitolo13.md](capitolo13.md).
+
 ## 2. Cosa ho fatto
 
 ### Invio (Action Mailer)
