@@ -57,7 +57,8 @@
 
   <div class="field">
     <%= form.label :body %>
-    <%= form.text_area :body, rows: 14, placeholder: "Racconta la partita... (una riga vuota separa i paragrafi)" %>
+    <%# rich_text_area: l'editor Trix (grassetto, elenchi, link, citazioni, immagini trascinate…) al posto della textarea %>
+    <%= form.rich_text_area :body, placeholder: "Racconta la partita…" %>
   </div>
 
   <div class="actions">

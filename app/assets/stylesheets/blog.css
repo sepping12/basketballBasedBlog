@@ -409,6 +409,36 @@ fieldset.field legend { padding: 0; margin-bottom: .45rem; font-weight: 600; fon
 .cover-current img { display: block; border-radius: 6px; }
 .form input[type="file"] { width: 100%; padding: .6rem; font: inherit; background: var(--paper); border: 2px dashed var(--line); border-radius: 10px; }
 
+/* ---------- Testo formattato (Action Text / Trix) ---------- */
+/* Il testo dell'articolo è dentro <div class="trix-content">: paragrafi come <div> o <p>, <h1>, elenchi, citazioni, codice, link. */
+.prose .trix-content { font-size: inherit; line-height: inherit; }
+.prose .trix-content > div, .prose .trix-content > p, .prose .trix-content > ul, .prose .trix-content > ol,
+.prose .trix-content > blockquote, .prose .trix-content > pre, .prose .trix-content > figure { margin: 0 0 1.4em; }
+.prose .trix-content > :first-child:not(h1):not(ul):not(ol):not(pre):not(figure)::first-letter {   /* capolettera: solo su un paragrafo */
+  float: left; margin: .05em .12em 0 0; font: 400 4.2rem/.8 var(--font-display); color: var(--orange);
+}
+.prose .trix-content h1 { font: 400 2rem/1.1 var(--font-display); letter-spacing: .03em; text-transform: uppercase; margin: 2rem 0 .6rem; }
+.prose .trix-content blockquote { margin-left: 0; padding: .4rem 0 .4rem 1.2rem; border-left: 4px solid var(--orange); color: var(--muted); font-style: italic; }
+.prose .trix-content ul, .prose .trix-content ol { padding-left: 1.4rem; }
+.prose .trix-content li { margin-bottom: .3em; }
+.prose .trix-content pre { overflow-x: auto; padding: 1rem; font-size: .9rem; line-height: 1.5; color: #f3ece0; background: var(--ink); border-radius: 10px; }
+.prose .trix-content a { color: var(--orange-dark); }
+.prose .trix-content img { max-width: 100%; height: auto; border-radius: 10px; }
+.prose .trix-content .attachment { display: block; }
+.prose .trix-content .attachment__caption { font-size: .85rem; color: var(--muted); text-align: center; }
+
+/* L'editor nel form: stesso aspetto degli altri campi */
+.form trix-editor {
+  min-height: 18rem; padding: .75rem .9rem; font: inherit; line-height: 1.6; color: var(--ink);
+  background: var(--paper); border: 2px solid var(--line); border-radius: 10px;
+  transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.form trix-editor:focus { outline: none; background: #fff; border-color: var(--orange); box-shadow: 0 0 0 4px var(--orange-soft); }
+.form trix-toolbar { margin-bottom: .4rem; }
+.form trix-toolbar .trix-button-group { border-color: var(--line); border-radius: 8px; overflow: hidden; background: #fff; }
+.form trix-toolbar .trix-button { border-bottom-color: var(--line); }
+.form trix-toolbar .trix-button.trix-active { background: var(--orange-soft); }
+
 /* ---------- Note sotto i form ---------- */
 .form-note { margin: 1.2rem 0 0; text-align: center; color: var(--muted); font-size: .95rem; }
 

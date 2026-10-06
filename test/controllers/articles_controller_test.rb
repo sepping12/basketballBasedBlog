@@ -311,3 +311,93 @@ class ArticlesCoverControllerTest < ActionDispatch::IntegrationTest
   end
 end
 
+# Capitolo 11: testo formattato (Action Text + editor Trix)
+class ArticlesRichTextControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @article = articles(:one)
+    log_in_as users(:one)
+  end
+
+  test "il form ha l'editor Trix e il campo nascosto che invia l'HTML" do
+    get edit_article_url(@article)
+    assert_select "trix-editor[input]"
+    assert_select "input[type=hidden][name='article[body]']"
+    assert_select "trix-toolbar", count: 0          # la barra degli strumenti la crea il JavaScript di Trix nel browser
+    assert_select "textarea[name='article[body]']", count: 0
+  end
+
+  test "il campo di testo contiene l'HTML già salvato (da modificare)" do
+    @article.update!(body: "<p>Testo <strong>forte</strong></p>")
+    get edit_article_url(@article)
+    assert_select "input[type=hidden][name='article[body]'][value*='<strong>forte</strong>']"
+  end
+
+  test "si pubblica un articolo con testo formattato e la pagina lo mostra formattato" do
+    html = "<h1>Titolo</h1><div>Un <strong>grassetto</strong> e un <em>corsivo</em></div><ul><li>uno</li><li>due</li></ul>"
+    post articles_url, params: { article: { title: "Formattato", body: html } }
+    get article_url(Article.find_by!(title: "Formattato"))
+    assert_select ".prose .trix-content strong", text: "grassetto"
+    assert_select ".prose .trix-content em", text: "corsivo"
+    assert_select ".prose .trix-content h1", text: "Titolo"
+    assert_select ".prose .trix-content ul li", count: 2
+  end
+
+  test "l'HTML pericoloso viene ripulito quando il testo viene mostrato (XSS)" do
+    sporco = %(<div onclick="rubaDati()">Ciao</div><script>alert('xss')</script><a href="javascript:alert(1)">clic</a><strong>ok</strong>)
+    post articles_url, params: { article: { title: "Sporco", body: sporco } }
+    get article_url(Article.find_by!(title: "Sporco"))
+    assert_no_match(/<script>alert/, response.body)
+    assert_no_match(/onclick/, response.body)
+    assert_no_match(/javascript:alert/, response.body)
+    assert_select ".trix-content strong", text: "ok"
+    assert_select ".trix-content", text: /Ciao/
+  end
+
+  test "un testo vuoto non si salva: errore e l'editor si ripresenta" do
+    assert_no_difference("Article.count") do
+      post articles_url, params: { article: { title: "Senza testo", body: "" } }
+    end
+    assert_response :unprocessable_entity
+    assert_select "#error_explanation li", text: "Testo è obbligatorio"
+    assert_select "trix-editor"
+  end
+
+  test "la scheda dell'elenco mostra l'inizio del TESTO, senza tag, quando manca l'estratto" do
+    @article.update!(excerpt: nil, body: "<p>Prima frase con <strong>grassetto</strong>.</p>")
+    get articles_url
+    assert_select ".card__excerpt", text: /Prima frase con grassetto\./
+    assert_no_match(/&lt;strong/, response.body)
+  end
+
+  test "l'API JSON dà il testo semplice (body) e quello formattato (body_html)" do
+    @article.update!(body: "<p>Testo <strong>forte</strong></p>")
+    get articles_url(format: :json)
+    dato = JSON.parse(response.body).find { |a| a["id"] == @article.id }
+    assert_equal "Testo forte", dato["body"]
+    assert_includes dato["body_html"], "<strong>forte</strong>"
+    assert_includes dato["body_html"], "trix-content"
+  end
+
+  test "un altro utente non può modificare il testo di un articolo non suo" do
+    delete logout_path
+    log_in_as users(:two)
+    assert_raises(ActiveRecord::RecordNotFound) do
+      patch article_url(@article), params: { article: { body: "<p>Rubato</p>" } }
+    end
+    assert_includes @article.reload.body.to_plain_text, "Testo del primo articolo"
+  end
+
+  test "l'elenco fa lo stesso numero di query con 2 o con 12 articoli (with_rich_text_body: niente N+1)" do
+    conta = lambda do
+      n = 0
+      cb = ->(*, payload) { n += 1 unless payload[:name].to_s =~ /SCHEMA/ || payload[:sql] =~ /SAVEPOINT|RELEASE|BEGIN|COMMIT/ }
+      ActiveSupport::Notifications.subscribed(cb, "sql.active_record") { get articles_url }
+      n
+    end
+    prima = conta.call
+    10.times { |i| Article.create!(title: "Extra #{i}", user: users(:one), body: "<p>Testo #{i}</p>", published_at: 1.day.ago) }
+    dopo = conta.call
+    assert_equal prima, dopo, "le query dovrebbero restare #{prima}, sono diventate #{dopo}"
+  end
+end
+

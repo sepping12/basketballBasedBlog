@@ -4,7 +4,7 @@ module ArticlesHelper
   end
 
   def reading_time(article)
-    minutes = [(article.body.to_s.split.size / 200.0).ceil, 1].max
+    minutes = [(article.body.to_plain_text.split.size / 200.0).ceil, 1].max
     "#{minutes} min di lettura"
   end
 

@@ -908,10 +908,24 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
-"@rails/actioncable@^6.0.0":
-  version "6.1.710"
-  resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-6.1.710.tgz#5c77515cbc9b8fb5118afa0aa0048192b33c33ea"
-  integrity sha512-YDzMuh8mDRNLFXiexlLVnF1NUwk1bXwwO1gtEhOCsCqIsL6D21JfxpMwAD5x8qzrMJ1J0RZVa2hLl7ofeg+Mqw==
+"@rails/actioncable@6.0.6-1":
+  version "6.0.6-1"
+  resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-6.0.6-1.tgz#3979b5242ef0570f6f405480431aea38458eda71"
+  integrity sha512-S6wHt7sfEOeCS+H8oxFGRXt4sLM1HVGu64X9MyFNFL5RXjuUG5rsaH2bFye0mrmimmtF4+qDrlS3iUpnU7ZPCw==
+
+"@rails/actiontext@6.0.6-1":
+  version "6.0.6-1"
+  resolved "https://registry.yarnpkg.com/@rails/actiontext/-/actiontext-6.0.6-1.tgz#33ddadb685b47e3c87e49c4622a8a86a2b2dfa04"
+  integrity sha512-TD0kXVdkFtzUWcPDpT1julJ+URKbnV3ssETx/aRwkRoCdQfUnp57By+cl4dWKqOVC7J6WSZKT+mvCveOv9mwMg==
+  dependencies:
+    "@rails/activestorage" "^6.0.0"
+
+"@rails/activestorage@6.0.6-1":
+  version "6.0.6-1"
+  resolved "https://registry.yarnpkg.com/@rails/activestorage/-/activestorage-6.0.6-1.tgz#31d50614b7cf3066df30ffab09b82bd2c372428f"
+  integrity sha512-++Wdksqdy45XuhSBM/Mp2v+dhNL1toW4sQ6zSp7zamjpSggYwXuHenpHFzSAa6rNIiANdDFgvO68ssyClfBv7g==
+  dependencies:
+    spark-md5 "^3.0.0"
 
 "@rails/activestorage@^6.0.0":
   version "6.1.710"
@@ -920,10 +934,10 @@
   dependencies:
     spark-md5 "^3.0.0"
 
-"@rails/ujs@^6.0.0":
-  version "6.1.710"
-  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.710.tgz#14cbf938c49985af51cca52d117f9c358ea4a579"
-  integrity sha512-NUS8nUkYHGSn/EDg3oJCkpMweSKeFxA4ef6pcnW2fJEZ7RcoWdJa1rr9vamUoqzNR+Ctd8ezsgBMAjxUahVB1w==
+"@rails/ujs@6.0.6-1":
+  version "6.0.6-1"
+  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.0.6-1.tgz#a30b0879203144eeb6cc91bce78a751ff99bdc3a"
+  integrity sha512-E0MZU0l3XWZirpqRhGfA1M9fJF4ydUw6NK4mxdvekeRJcBtvwBtaOJySoZjS/9YM6pHSvA9fjhQkNEiRPRT9Ng==
 
 "@rails/webpacker@4.3.0":
   version "4.3.0"
@@ -7020,6 +7034,11 @@ toidentifier@1.0.1, toidentifier@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.1.tgz#3be34321a88a820ed1bd80dfaa33e479fbb8dd35"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
+
+trix@^1.2.0:
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/trix/-/trix-1.3.5.tgz#87c214ce75fbaacff127f6e70fc64b2ff41e3e7a"
+  integrity sha512-JGQtfTU40DZYWS64rjUSbzAN6C+VFbyMLtdVzVTbI1mt3WJCP9+e3lju8Mtuivs9NwXOxowInNA4B34h7dVEZg==
 
 ts-pnp@^1.1.6:
   version "1.2.0"

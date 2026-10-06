@@ -7,6 +7,8 @@
 # annullata: i dati del blog restano com'erano.
 #
 # Prerequisito: i modelli e le migrazioni del capitolo 6 (già fatti nel progetto).
+# NOTA (Capitolo 11): `body` non è più una colonna di articles (è un rich text), quindi gli esempi di ricerca
+# SQL che nel libro usano `body` qui usano `excerpt`.
 
 def sezione(titolo)
   puts
@@ -96,7 +98,7 @@ ActiveRecord::Base.transaction do
 
   # ------------------------------------------------------------------------
   sezione "OPZIONI DELLE ASSOCIAZIONI: ordine predefinito e :dependent"
-  irb "Article.where(user_id: user.id).delete_all"
+  irb "Article.where(user_id: user.id).destroy_all"   # destroy_all (non delete_all): dal Capitolo 11 il testo sta in un'altra tabella e delete_all salta i callback, lasciandone righe orfane
   irb "user.articles.create!(title: 'Vecchio', body: 'x', published_at: '2020-01-01')"
   irb "user.articles.create!(title: 'Nuovo', body: 'x', published_at: '2026-10-01')"
   irb "user.articles.create!(title: 'Altro nuovo', body: 'x', published_at: '2026-10-01')"
@@ -139,11 +141,11 @@ ActiveRecord::Base.transaction do
   sezione "RICERCA AVANZATA: where"
   irb "Article.where(title: 'Advanced Active Record').count"            # sintassi hash (AND tra le condizioni)
   irb "Article.where(\"title = 'Advanced Active Record'\").count"       # frammento SQL
-  irb "Article.where(\"created_at > '2020-02-04' OR body NOT LIKE '%model%'\").count > 0"
+  irb "Article.where(\"created_at > '2020-02-04' OR excerpt NOT LIKE '%model%'\").count > 0"
   irb "Article.where('published_at < ?', Time.now).to_sql"              # condizioni array: il ? è sostituito in sicurezza
-  irb "Article.where('created_at = ? OR body LIKE ?', Article.last.created_at, 'model').to_sql"
-  irb "Article.where('title LIKE :search OR body LIKE :search', {search: '%association%'}).to_sql"   # segnaposto nominati
-  irb "Article.where('title LIKE :search OR body LIKE :search', {search: '%association%'}).count > 0"
+  irb "Article.where('created_at = ? OR excerpt LIKE ?', Article.last.created_at, 'model').to_sql"
+  irb "Article.where('title LIKE :search OR excerpt LIKE :search', {search: '%association%'}).to_sql"   # segnaposto nominati
+  irb "Article.where('title LIKE :search OR excerpt LIKE :search', {search: '%association%'}).count > 0"
 
   puts
   puts "--- SQL INJECTION: perché NON si interpolano i dati dell'utente nelle stringhe SQL"

@@ -18,7 +18,7 @@
     <% if article.categories.any? %>
       <p class="chips"><% article.categories.each do |category| %><span class="chip"><%= category.name %></span><% end %></p>
     <% end %>
-    <p class="card__excerpt"><%= article.excerpt.presence || truncate(article.body, length: 140) %></p>
+    <p class="card__excerpt"><%= article.excerpt.presence || truncate(article.body.to_plain_text, length: 140) %></p>
     <div class="card__foot">
       <span><%= reading_time(article) %></span>
       <%= link_to "Leggi →", article, class: "card__more" %>

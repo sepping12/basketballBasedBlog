@@ -4,6 +4,9 @@
 #
 # Come nel capitolo 4, irb("codice") esegue il codice e stampa il risultato "=>".
 #
+# NOTA (Capitoli 8 e 11): ora ogni articolo ha un autore (`user: base`) e `body` non è più una colonna
+# (è un rich text di Action Text): per questo la lista delle colonne non lo contiene.
+#
 # SICUREZZA: il libro parte con `rails db:reset`, che CANCELLA il database.
 # Qui non lo facciamo: tutto gira dentro una transazione che alla fine viene
 # annullata (ActiveRecord::Rollback). Gli articoli del blog restano com'erano.
@@ -13,6 +16,10 @@ def sezione(titolo)
   puts "=" * 66
   puts titolo
   puts "=" * 66
+end
+
+def condividi(nome, valore)
+  TOPLEVEL_BINDING.local_variable_set(nome, valore)
 end
 
 def irb(codice)
@@ -43,6 +50,10 @@ id_massimo_prima = Article.maximum(:id)
 puts "Articoli nel database prima degli esercizi: #{articoli_prima}"
 
 ActiveRecord::Base.transaction do
+  # Dal Capitolo 8 ogni articolo DEVE avere un autore (belongs_to obbligatorio): ne creo uno di servizio.
+  base = User.create!(email: 'base5@example.com', password: 'secret', password_confirmation: 'secret')
+  condividi(:base, base)
+
   # -------------------------------------------------------------------------
   sezione "ACTIVE RECORD: tabelle ↔ classi, righe ↔ oggetti, colonne ↔ attributi"
   irb "Article.superclass"
@@ -73,6 +84,7 @@ ActiveRecord::Base.transaction do
   irb "article.title = 'RailsConf'"
   irb "article.body = 'RailsConf is the official gathering for Rails developers..'"
   irb "article.published_at = '2020-01-31'"
+  irb "article.user = base"          # dal Capitolo 8 ogni articolo ha un autore: senza, save restituirebbe false
   irb "article.id"                   # nil: ancora niente id
   puts "--- save: ecco l'SQL generato"
   con_sql { irb "article.save" }
@@ -86,12 +98,12 @@ ActiveRecord::Base.transaction do
   irb "article.title"
 
   sezione "CREARE: new passando tutti gli attributi insieme"
-  irb "article = Article.new(title: 'Introduction to Active Record', body: 'Active Record is Rails default ORM..', published_at: Time.zone.now)"
+  irb "article = Article.new(user: base, title: 'Introduction to Active Record', body: 'Active Record is Rails default ORM..', published_at: Time.zone.now)"
   irb "article.save"
 
   sezione "CREARE: create = new + save in un colpo solo"
-  irb "Article.create(title: 'RubyConf 2020', body: 'The annual RubyConf will take place in..', published_at: '2020-01-31')"
-  irb "attributes = {title: 'Rails Pub Nite', body: 'Rails Pub Nite is every 3rd Monday of each month.', published_at: '2020-01-31'}"
+  irb "Article.create(user: base, title: 'RubyConf 2020', body: 'The annual RubyConf will take place in..', published_at: '2020-01-31')"
+  irb "attributes = {user: base, title: 'Rails Pub Nite', body: 'Rails Pub Nite is every 3rd Monday of each month.', published_at: '2020-01-31'}"
   irb "Article.create(attributes)"
   irb "Article.count == #{articoli_prima} + 4"
 
@@ -173,12 +185,15 @@ ActiveRecord::Base.transaction do
   irb "Article.destroy(ids).size"
 
   sezione "ELIMINARE: delete (senza istanziare, senza callback)"
-  irb "Article.create!(title: 'Da eliminare', body: 'x').id.class"
+  irb "Article.create!(user: base, title: 'Da eliminare', body: 'x').id.class"
   irb "id_b = Article.last.id"
   irb "Article.delete(id_b)"         # numero di righe eliminate: 1
+  puts "--- ATTENZIONE (dal Capitolo 11): delete salta i callback, quindi il TESTO dell'articolo (tabella di Action Text) resta orfano"
+  irb "ActionText::RichText.where(record_type: 'Article', record_id: id_b).count"     # 1: riga orfana
+  irb "ActionText::RichText.where(record_type: 'Article', record_id: id_b).delete_all"    # ripulita a mano; con destroy non servirebbe
   irb "Article.delete([id_b, id_b + 1])"   # non esistono più: 0
   irb "Article.delete(1, 2, 3)"      # delete vuole un array esplicito
-  irb "Article.create!(title: 'Vecchio', body: 'x', published_at: '2010-06-01').id.class"
+  irb "Article.create!(user: base, title: 'Vecchio', body: 'x', published_at: '2010-06-01').id.class"
   irb "Article.delete_by(\"published_at < '2011-01-01'\")"   # elimina per condizione, restituisce il numero
 
   # -------------------------------------------------------------------------

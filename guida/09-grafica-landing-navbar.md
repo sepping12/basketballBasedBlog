@@ -223,6 +223,8 @@ Tre tecniche, tutte senza installare niente:
    def data_it(time) = "#{time.day} #{MESI[time.month - 1]} #{time.year}"   # → "5 ottobre 2026"
    ```
 
+> 🔄 **Aggiornamento (Capitolo 11)**: il testo dell'articolo è ora un rich text (Action Text): la pagina stampa `@article.body` (HTML sanificato) invece di `simple_format`, e il tempo di lettura conta le parole di `body.to_plain_text`.
+
 ## 9.9 L'articolo: testo e tempo di lettura
 
 In `show.html.erb`:

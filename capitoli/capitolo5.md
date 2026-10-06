@@ -1,5 +1,7 @@
 # Capitolo 5 — Lavorare con un database: Active Record
 
+> 🔄 **Aggiornamento (Capitoli 8 e 11)**: ora ogni articolo ha un autore (`user`) e `body` **non è più una colonna** (è un rich text di Action Text). Nei listati con `Article.create(title:, body:)` serve quindi anche `user:`, e la lista delle colonne non contiene `body`. Gli esempi dello script sono stati adattati. Inoltre `Article.delete` lascia orfano il testo: con Action Text si usa `destroy`.
+
 > **In una frase**: Active Record è il pezzo di Rails che ti fa leggere e scrivere nel database usando oggetti Ruby invece di SQL. Qui impari le 4 operazioni di base (**CRUD**) dalla console.
 
 ## 1. Il contesto (la mappa mentale)

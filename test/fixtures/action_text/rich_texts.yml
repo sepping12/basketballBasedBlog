@@ -1,0 +1,11 @@
+# Il testo degli articoli (Action Text) sta in una tabella a parte, non più nella colonna articles.body.
+# "record: one (Article)" = il record "one" del file articles.yml.
+one:
+  record: one (Article)
+  name: body
+  body: <p>Testo del primo articolo</p>
+
+two:
+  record: two (Article)
+  name: body
+  body: <p>Testo della bozza</p>

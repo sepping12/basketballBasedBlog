@@ -3,6 +3,12 @@
 # È sicuro rilanciarlo: ciò che esiste già non viene duplicato né sovrascritto.
 # (Il libro usa db:setup per questo; find_or_create_by! evita il problema.)
 
+# Il testo degli articoli è un rich text (Capitolo 11): HTML. I testi qui sotto sono scritti in forma semplice
+# (paragrafi separati da una riga vuota) e questa funzione li trasforma in <p>…</p>.
+def testo_in_html(testo)
+  testo.to_s.strip.split(/\n[ \t]*\n/).map { |p| "<p>#{ERB::Util.html_escape(p.strip)}</p>" }.join
+end
+
 # Utente di prova (Capitolo 6). NON usare questa password su un sito vero.
 user = User.find_or_create_by!(email: 'mary@example.com') do |u|
   u.password = 'guessit'
@@ -83,7 +89,7 @@ articles = [
 
 articles.each do |attrs|
   article = Article.find_or_create_by!(title: attrs[:title]) do |a|
-    a.assign_attributes(attrs.except(:categories, :cover).merge(user: user))
+    a.assign_attributes(attrs.except(:categories, :cover).merge(user: user, body: testo_in_html(attrs[:body])))
   end
   # Copertina (immagine generata per l'esempio, in db/seeds/covers): solo se l'articolo non ne ha già una.
   if attrs[:cover] && !article.cover_image.attached?

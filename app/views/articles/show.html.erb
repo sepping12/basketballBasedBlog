@@ -27,7 +27,8 @@
     </figure>
   <% end %>
   <div class="prose">
-    <%= simple_format(@article.body) %>
+    <%# body è un rich text: stampato così com'è, Action Text lo SANIFICA (tiene grassetto, elenchi, link…; toglie <script>) %>
+    <%= @article.body %>
   </div>
 
   <div class="article-actions">

@@ -11,6 +11,11 @@ class Article < ApplicationRecord
   # (tabelle active_storage_blobs e active_storage_attachments, "polimorfiche": servono per qualsiasi modello).
   has_one_attached :cover_image
 
+  # Il testo dell'articolo è "rich text" (Action Text): HTML modificabile con l'editor Trix.
+  # Ora Article#body NON è più una colonna di articles: restituisce un oggetto ActionText::RichText,
+  # salvato nella tabella action_text_rich_texts. Aggiunge anche lo scope with_rich_text_body.
+  has_rich_text :body
+
   # Valore della checkbox "Rimuovi l'immagine" del form: non è una colonna, è solo un attributo "virtuale".
   attr_accessor :remove_cover_image
   after_save :purge_cover_image_if_requested
