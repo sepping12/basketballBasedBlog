@@ -1,5 +1,7 @@
 # Capitolo 6 — Active Record avanzato: potenziare i modelli
 
+> 🔄 **Aggiornamento (Capitolo 8)**: con il login, `Article belongs_to :user` è **tornato obbligatorio** (come nel libro) e ora ogni articolo ha un autore. Il resto del capitolo è rimasto com'era; il numero totale di test è ora 92. Dove trovi `optional: true` qui sotto, descrive lo stato *di quel momento*.
+
 > **In una frase**: un modello non è solo una tabella. Gli dai metodi, lo colleghi agli altri modelli (**associazioni**), cerchi i dati in modo avanzato (**where e scope**), e gli fai rispettare regole (**validazioni**) e reagire agli eventi (**callback**).
 
 ## 1. Il contesto (la mappa mentale)

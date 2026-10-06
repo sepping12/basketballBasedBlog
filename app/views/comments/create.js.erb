@@ -1,0 +1,7 @@
+<%# Risposta JavaScript all'invio del form dei commenti (richiesta Ajax riuscita). %>
+document.querySelector("#commenti-lista").insertAdjacentHTML("beforeend", "<%= j render(@comment) %>");
+document.querySelector("#commenti-vuoto").hidden = true;
+document.querySelector("#commenti-titolo").textContent = "<%= j comments_title(@article) %>";
+<%# Un form nuovo e pulito al posto del vecchio: svuotato e senza errori residui. %>
+document.querySelector("#form-commento").innerHTML = "<%= j render('comments/form', article: @article, comment: Comment.new) %>";
+<%= render "shared/toast", message: "Grazie per il commento!" %>

@@ -1,0 +1,15 @@
+<%# Un commento. Si usa con: render @article.comments  (la locale `comment` è automatica) %>
+<div class="comment" id="commento-<%= comment.id %>">
+  <div class="comment__head">
+    <strong><%= comment.name %></strong>
+    <span class="comment__date"><%= data_it(comment.created_at) %></span>
+    <%# L'email non è pubblica: la vede solo l'autore dell'articolo (che può rispondere per email). %>
+    <% if comment.article.owned_by?(current_user) %>
+      <span class="comment__email"><%= comment.email %></span>
+      <%# remote: true → richiesta Ajax; risponde destroy.js.erb, che toglie dalla pagina l'elemento #commento-ID %>
+      <%= link_to "Elimina", article_comment_path(comment.article, comment), method: :delete, remote: true,
+            data: { confirm: "Eliminare questo commento?" }, class: "comment__delete" %>
+    <% end %>
+  </div>
+  <%= simple_format(comment.body) %>
+</div>

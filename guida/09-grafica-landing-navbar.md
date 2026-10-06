@@ -16,7 +16,7 @@ Questo passo va oltre il libro (Capitolo 3): non c'è nel PDF, è un'estensione 
 | `app/views/pages/about.html.erb` | pagina "Chi sono" (testo di partenza da riscrivere) |
 | `app/views/layouts/application.html.erb` | **layout**: navbar + footer + messaggio flash, intorno a ogni pagina |
 | `app/views/shared/_ball.html.erb` | partial: il pallone in SVG, riusato ovunque |
-| `app/views/articles/_card.html.erb` | partial: la "card" di anteprima di un articolo |
+| `app/views/articles/_article.html.erb` | partial: la "card" di anteprima di un articolo (si chiamava `_card`: rinominato nel Capitolo 7 per la convenzione `render @articles`) |
 | `app/views/articles/{index,show,new,edit,_form}.html.erb` | ridisegnati |
 | `app/helpers/application_helper.rb` | nome del blog, `nav_link`, date in italiano |
 | `app/helpers/articles_helper.rb` | `article_date`, `reading_time` |
@@ -84,6 +84,8 @@ Punti chiave:
   ```
   e il layout lo legge con `yield(:title)` → `<title>Articoli · Fast Break</title>`. `content_for` serve a "mandare" pezzi dalla vista al layout.
 
+> 🔄 **Aggiornamento (Capitolo 8)**: la navbar ora cambia con il login: da visitatore mostra *Accedi* e *Registrati*; da loggato mostra *Il mio account*, *Esci* e il pulsante *Scrivi*. Il codice descritto qui sotto è la base, a cui si sono aggiunti un `if logged_in?` e due link.
+
 ### Il link attivo nella navbar
 
 ```ruby
@@ -137,14 +139,14 @@ Un file che inizia con `_` è un **partial**. Ce ne sono due nuovi:
 ```
 Dentro il partial: `local_assigns.fetch(:size, 40)` = "prendi `size`, se non c'è usa 40".
 
-**`articles/_card.html.erb`**, la scheda di un articolo, usata sia nella home sia nell'elenco:
+**`articles/_article.html.erb`**, la scheda di un articolo, usata sia nella home sia nell'elenco:
 
 ```erb
-<%= render partial: "articles/card", collection: @articles, as: :article %>
+<%= render @articles %>
 ```
-`collection:` chiama il partial **una volta per ogni articolo** (come un `each`), passandolo come variabile locale `article`. Più pulito del ciclo con l'HTML dentro.
+`render @articles` chiama il partial `articles/_article` **una volta per ogni articolo** (come un `each`), passandolo come variabile locale `article`: lo deduce dal tipo degli oggetti (convenzione, vedi Capitolo 7). Nel passo 9 era scritto in forma esplicita, `render partial: "articles/card", collection: @articles, as: :article`: stesso risultato. Più pulito del ciclo con l'HTML dentro.
 
-Dentro `_card`, una piccola eleganza: il colore della copertina cambia da un articolo all'altro:
+Dentro il partial, una piccola eleganza: il colore della copertina cambia da un articolo all'altro:
 
 ```erb
 class="card__cover cover-<%= article.id % 4 %>"
@@ -367,7 +369,7 @@ Prova anche a restringere la finestra del browser: la navbar diventa hamburger.
 
 1. In un helper (es. `ApplicationHelper#contact_phone`), chiamato da navbar e footer: DRY, si cambia in un punto solo.
 2. `yield` è il punto del layout dove entra la vista corrente; `content_for :title` manda un pezzo (il titolo) dalla vista al layout.
-3. Un partial (file con `_`) è un pezzo riusabile incluso con `render`. Per ogni elemento: `render partial: "articles/card", collection: @articles, as: :article`.
+3. Un partial (file con `_`) è un pezzo riusabile incluso con `render`. Per ogni elemento: `render @articles` (o, in forma esplicita, `render partial: "articles/article", collection: @articles`).
 4. Una query con un nome, riusabile e concatenabile. Es. `scope :published, -> { where.not(published_at: nil) }`.
 5. Usa `find_or_create_by!(title: ...)`: se il titolo esiste già lo trova e non crea niente.
 6. Nel messaggio d'errore nel browser (indica riga e file), e nel terminale del server / `log/development.log`.

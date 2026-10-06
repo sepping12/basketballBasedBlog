@@ -55,7 +55,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [comments(:one)], users(:one).replies.to_a
   end
 
-  test "eliminando un utente i suoi articoli restano senza autore (:nullify) e il profilo sparisce (:destroy)" do
+  test "eliminando un utente i suoi articoli restano, orfani (:nullify), e il profilo sparisce (:destroy)" do
     users(:one).destroy
     assert_nil articles(:one).reload.user_id
     assert_equal 0, Profile.where(user_id: users(:one).id).count

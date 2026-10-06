@@ -1,4 +1,5 @@
-<%# Card di anteprima di un articolo. Uso: render partial: "articles/card", collection: @articles, as: :article %>
+<%# Card di anteprima di un articolo. Per convenzione di Rails, `render @articles` (o `render @article`)
+    cerca questo file (articles/_article) e crea da solo la variabile locale `article`. %>
 <article class="card">
   <%= link_to article, class: "card__cover cover-#{article.id % 4}", tabindex: -1, "aria-hidden": true do %>
     <%= render "shared/ball", size: 84 %>
@@ -9,6 +10,9 @@
       <% if article.location.present? %>· <%= article.location %><% end %>
     </p>
     <h3 class="card__title"><%= link_to article.title, article %></h3>
+    <% if article.categories.any? %>
+      <p class="chips"><% article.categories.each do |category| %><span class="chip"><%= category.name %></span><% end %></p>
+    <% end %>
     <p class="card__excerpt"><%= article.excerpt.presence || truncate(article.body, length: 140) %></p>
     <div class="card__foot">
       <span><%= reading_time(article) %></span>

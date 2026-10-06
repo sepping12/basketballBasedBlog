@@ -1,0 +1,3 @@
+<%# Commento non valido: si sostituisce il form con la versione che mostra gli errori (e il testo già scritto).
+    Il libro usa un alert() con i messaggi; qui niente finestre di dialogo. %>
+document.querySelector("#form-commento").innerHTML = "<%= j render('comments/form', article: @article, comment: @comment) %>";

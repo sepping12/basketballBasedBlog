@@ -1,10 +1,9 @@
 class Article < ApplicationRecord
   validates :title, :body, presence: true
 
-  # Nel libro (Listato 6-6) è `belongs_to :user`, obbligatorio. Qui è facoltativo
-  # perché nel blog non c'è ancora il login (Capitolo 8): il form non sa chi è
-  # l'autore e tutti i salvataggi fallirebbero con "Utente deve esistere".
-  belongs_to :user, optional: true
+  # Ogni articolo ha un autore. (Nel Capitolo 6 era `optional: true` perché non c'era ancora
+  # il login; ora il controller crea gli articoli con current_user.articles.new.)
+  belongs_to :user
   has_and_belongs_to_many :categories
   has_many :comments
 
@@ -23,5 +22,11 @@ class Article < ApplicationRecord
 
   def published?
     published_at.present?
+  end
+
+  # L'articolo appartiene a questo utente? (nil, o un non-utente, dà sempre false)
+  def owned_by?(owner)
+    return false unless owner.is_a?(User)
+    user == owner
   end
 end

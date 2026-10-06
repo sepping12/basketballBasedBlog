@@ -1,0 +1,8 @@
+<%# Risposta JavaScript a:  link_to "Scrivi un commento", new_article_comment_path(@article), remote: true
+    `j` è l'abbreviazione di escape_javascript: rende il testo HTML utilizzabile dentro una stringa JavaScript. %>
+var contenitore = document.querySelector("#form-commento");
+contenitore.insertAdjacentHTML("beforeend", "<%= j render('comments/form', article: @article, comment: @comment) %>");
+contenitore.classList.add("fade-in");                                  // entrata in dissolvenza (regola CSS)
+document.querySelector("#new_comment_link").style.display = "none";    // il form è in pagina: il link non serve più
+var primo_campo = contenitore.querySelector("input[type=text]");
+if (primo_campo) { primo_campo.focus(); }

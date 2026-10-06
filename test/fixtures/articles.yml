@@ -1,4 +1,4 @@
-# one: pubblicato, con autore. two: bozza (published_at vuoto), senza autore.
+# one: pubblicato, dell'utente one. two: bozza (published_at vuoto), dell'utente two.
 one:
   title: Articolo pubblicato
   location: Milano
@@ -11,3 +11,4 @@ two:
   title: Bozza di prova
   body: Testo della bozza
   published_at:
+  user: two

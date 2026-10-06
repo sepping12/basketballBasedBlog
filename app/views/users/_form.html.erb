@@ -1,0 +1,32 @@
+<%= form_with(model: user, local: true, class: "form") do |form| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation" role="alert">
+      <h2>Non posso salvare: <%= pluralize(user.errors.count, "problema", "problemi") %></h2>
+      <ul>
+        <% user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email, autocomplete: "email", placeholder: "nome@esempio.it" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password %>
+    <%= form.password_field :password, autocomplete: "new-password" %>
+    <% if user.persisted? %><small>Lascia vuoto per non cambiare la password.</small><% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password_confirmation %>
+    <%= form.password_field :password_confirmation, autocomplete: "new-password" %>
+  </div>
+
+  <div class="actions">
+    <%= submit_or_cancel(form, (user.persisted? ? "Salva i dati" : "Crea l'account"), (user.persisted? ? root_path : login_path)) %>
+  </div>
+<% end %>

@@ -31,13 +31,23 @@
           <%= nav_link "Home", root_path %>
           <%= nav_link "Articoli", articles_path, match: "/articles" %>
           <%= nav_link "Chi sono", about_path %>
-          <%= link_to "Scrivi", new_article_path, class: "btn btn--primary btn--sm" %>
+          <% if logged_in? %>
+            <%= nav_link "Il mio account", edit_user_path(current_user), match: "/users" %>
+            <%= link_to "Esci", logout_path, method: :delete, class: "nav__link" %>
+            <%= link_to "Scrivi", new_article_path, class: "btn btn--primary btn--sm" %>
+          <% else %>
+            <%= nav_link "Accedi", login_path %>
+            <%= link_to "Registrati", new_user_path, class: "btn btn--primary btn--sm" %>
+          <% end %>
         </div>
       </nav>
     </header>
 
     <% if notice.present? %>
       <div class="toast" role="status"><%= notice %></div>
+    <% end %>
+    <% if alert.present? %>
+      <div class="toast toast--alert" role="alert"><%= alert %></div>
     <% end %>
 
     <main>
@@ -57,7 +67,11 @@
           <%= link_to "Home", root_path %>
           <%= link_to "Articoli", articles_path %>
           <%= link_to "Chi sono", about_path %>
-          <%= link_to "Scrivi un articolo", new_article_path %>
+          <% if logged_in? %>
+            <%= link_to "Scrivi un articolo", new_article_path %>
+          <% else %>
+            <%= link_to "Accedi", login_path %>
+          <% end %>
         </div>
         <p class="footer__copy">© <%= Date.current.year %> <%= blog_name %> · Fatto con Ruby on Rails</p>
       </div>

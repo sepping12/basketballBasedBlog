@@ -1,0 +1,15 @@
+<%# Versione "senza JavaScript" del form: è ciò che si vede se il browser non fa Ajax. %>
+<% content_for :title, "Commenta: #{@article.title}" %>
+
+<header class="page-head">
+  <div class="container">
+    <p class="kicker">Commento</p>
+    <h1 class="page-head__title">Commenta l'articolo</h1>
+    <p class="page-head__lead"><%= @article.title %></p>
+  </div>
+</header>
+
+<section class="section container container--narrow">
+  <%= render "comments/form", article: @article, comment: @comment, local: true %>
+  <p class="form-note"><%= link_to "← Torna all'articolo", article_path(@article) %></p>
+</section>

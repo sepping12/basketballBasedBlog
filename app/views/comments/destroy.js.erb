@@ -1,0 +1,6 @@
+<%# Risposta all'eliminazione via Ajax: l'elemento sparisce dalla pagina senza ricaricarla. %>
+var commento = document.querySelector("#commento-<%= @comment.id %>");
+if (commento) { commento.remove(); }    // il libro usa removeChild per i vecchi browser; remove() oggi va bene
+document.querySelector("#commenti-vuoto").hidden = document.querySelector("#commenti-lista").children.length > 0;
+document.querySelector("#commenti-titolo").textContent = "<%= j comments_title(@article) %>";
+<%= render "shared/toast", message: "Commento eliminato." %>

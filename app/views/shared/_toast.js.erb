@@ -1,0 +1,10 @@
+<%# Mostra un messaggio temporaneo (come il flash), per le risposte Ajax: lì non c'è un redirect, quindi niente flash.
+    Uso: render "shared/toast", message: "Fatto!" dentro un template .js.erb %>
+(function () {
+  var toast = document.createElement("div");
+  toast.className = "toast";
+  toast.setAttribute("role", "status");
+  toast.textContent = "<%= j message %>";           // textContent: il testo non viene mai interpretato come HTML
+  document.body.appendChild(toast);
+  setTimeout(function () { toast.remove(); }, 4600);
+})();

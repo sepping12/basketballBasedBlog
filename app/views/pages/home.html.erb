@@ -82,7 +82,7 @@
 
     <% if @latest.any? %>
       <div class="grid">
-        <%= render partial: "articles/card", collection: @latest, as: :article %>
+        <%= render @latest %>
       </div>
     <% else %>
       <div class="empty">

@@ -15,6 +15,11 @@ def sezione(titolo)
   puts "=" * 70
 end
 
+# Le variabili create fuori da irb() vanno "passate" al binding che irb() usa per valutare il codice.
+def condividi(nome, valore)
+  TOPLEVEL_BINDING.local_variable_set(nome, valore)
+end
+
 def irb(codice)
   puts "irb> #{codice}"
   risultato = eval(codice, TOPLEVEL_BINDING).inspect
@@ -31,9 +36,13 @@ prima = {
 puts "Stato prima: #{prima}"
 
 ActiveRecord::Base.transaction do
+  # Dal Capitolo 8 ogni articolo DEVE avere un autore (belongs_to obbligatorio): ne creo uno di servizio.
+  base = User.create!(email: 'base@example.com', password: 'secret', password_confirmation: 'secret')
+  condividi(:base, base)
+
   # ------------------------------------------------------------------------
   sezione "AGGIUNGERE METODI: il modello è una classe Ruby (Listato 6-1)"
-  irb "a = Article.create!(title: 'Advanced Active Record', published_at: Date.today, body: 'Models need to relate to each other. In the real world, ..')"
+  irb "a = Article.create!(user: base, title: 'Advanced Active Record', published_at: Date.today, body: 'Models need to relate to each other. In the real world, ..')"
   irb "Article.find(a.id).long_title"
   irb "Article.find(a.id).published?"
 
@@ -108,7 +117,7 @@ ActiveRecord::Base.transaction do
   # ------------------------------------------------------------------------
   sezione "MOLTI-A-MOLTI: has_and_belongs_to_many (Article ↔ Category)"
   irb "Article.reflect_on_association(:categories).join_table"
-  irb "article = Article.create!(title: 'Articolo con categorie', body: 'x', published_at: Time.zone.now)"
+  irb "article = Article.create!(user: base, title: 'Articolo con categorie', body: 'x', published_at: Time.zone.now)"
   irb "cat = Category.find_by(name: 'Tattica')"
   irb "article.categories << cat"
   irb "article.categories.size"
@@ -147,7 +156,7 @@ ActiveRecord::Base.transaction do
   # ------------------------------------------------------------------------
   sezione "ASSOCIATION PROXY: le ricerche limitate al proprietario"
   irb "mio = autore.articles.first"
-  irb "altro = Article.create!(title: 'Di qualcun altro', body: 'x')"
+  irb "altro = Article.create!(user: base, title: 'Di qualcun altro', body: 'x')"   # di un altro utente (base)
   irb "autore.articles.find(mio.id).title"
   irb "autore.articles.find(altro.id)"            # non è suo: RecordNotFound
   irb "Article.find(altro.id).title"              # Article.find invece lo trova (nessun limite)
@@ -166,7 +175,7 @@ ActiveRecord::Base.transaction do
   irb "Category.all.to_sql"                        # default_scope: ORDER BY name
   irb "Article.published.count == Article.where.not(published_at: nil).count"
   irb "Article.draft.count"
-  irb "Article.create!(title: 'Una bozza', body: 'x')"
+  irb "Article.create!(user: base, title: 'Una bozza', body: 'x')"
   irb "Article.draft.where_title('bozza').pluck(:title)"           # scope concatenati
   irb "Article.where_title('Active').pluck(:title)"
   irb "Article.recent.to_sql"

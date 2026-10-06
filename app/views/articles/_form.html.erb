@@ -26,6 +26,14 @@
     </div>
   </div>
 
+  <fieldset class="field checks">
+    <legend>Categorie</legend>
+    <%# category_ids è un metodo aggiunto da has_and_belongs_to_many: array degli id delle categorie dell'articolo. %>
+    <%= form.collection_check_boxes(:category_ids, Category.all, :id, :name) do |b| %>
+      <%= b.label(class: "check") { b.check_box + b.text } %>
+    <% end %>
+  </fieldset>
+
   <div class="field">
     <%= form.label :excerpt %>
     <%= form.text_field :excerpt, placeholder: "Una frase che invogli a leggere" %>
@@ -38,7 +46,7 @@
   </div>
 
   <div class="actions">
-    <%= form.submit (article.persisted? ? "Salva le modifiche" : "Pubblica articolo"), class: "btn btn--primary btn--lg" %>
-    <%= link_to "Annulla", (article.persisted? ? article : articles_path), class: "link-more" %>
+    <%= submit_or_cancel(form, (article.persisted? ? "Salva le modifiche" : "Pubblica articolo"),
+                         (article.persisted? ? article : articles_path)) %>
   </div>
 <% end %>

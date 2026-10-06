@@ -9,6 +9,11 @@
       <% if @article.location.present? %><span>·</span> <span><%= @article.location %></span><% end %>
       <span>·</span> <span><%= reading_time(@article) %></span>
     </p>
+    <% if @article.categories.any? %>
+      <p class="chips">
+        <% @article.categories.each do |category| %><span class="chip"><%= category.name %></span><% end %>
+      </p>
+    <% end %>
     <% if @article.excerpt.present? %>
       <p class="page-head__lead"><%= @article.excerpt %></p>
     <% end %>
@@ -21,10 +26,34 @@
   </div>
 
   <div class="article-actions">
-    <%= link_to "Modifica", edit_article_path(@article), class: "btn btn--ghost-dark" %>
-    <%= link_to "Elimina", @article, method: :delete,
-          data: { confirm: "Sicuro di voler eliminare questo articolo?" },
-          class: "btn btn--danger" %>
+    <%# Modifica ed Elimina compaiono solo all'autore (il controller controlla comunque: nascondere un link non è sicurezza). %>
+    <% if @article.owned_by?(current_user) %>
+      <%= link_to "Modifica", edit_article_path(@article), class: "btn btn--ghost-dark" %>
+      <%= link_to "Elimina", @article, method: :delete,
+            data: { confirm: "Sicuro di voler eliminare questo articolo?" },
+            class: "btn btn--danger" %>
+    <% end %>
     <%= link_to "Torna agli articoli", articles_path, class: "link-more" %>
   </div>
 </article>
+
+<section class="section section--tint" id="commenti">
+  <div class="container container--narrow">
+    <h2 class="section__title" id="commenti-titolo"><%= comments_title(@article) %></h2>
+
+    <% commenti = @article.comments.order(:created_at) %>
+    <%# Gli id (commenti-lista, commenti-vuoto, commenti-titolo, form-commento) sono i "ganci" usati dai template JavaScript. %>
+    <div class="comments" id="commenti-lista"><%= render commenti if commenti.any? %></div>
+    <p class="comments__empty" id="commenti-vuoto" <%= "hidden" if commenti.any? %>>Ancora nessun commento: scrivi il primo!</p>
+
+    <h3 class="comments__title">Lascia un commento</h3>
+    <div id="form-commento">
+      <%# @comment c'è solo se l'invio senza JavaScript è fallito: si ri-mostra il form con gli errori. %>
+      <%= render "comments/form", article: @article, comment: @comment if @comment %>
+    </div>
+    <%# Il form non si carica con la pagina: la maggior parte dei lettori vuole solo leggere.
+        remote: true → Ajax; senza JavaScript il link porta alla pagina con il form. %>
+    <%= link_to "Scrivi un commento", new_article_comment_path(@article), remote: true,
+          id: "new_comment_link", class: "btn btn--primary", style: ("display: none" if @comment) %>
+  </div>
+</section>

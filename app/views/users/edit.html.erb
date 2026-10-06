@@ -1,0 +1,13 @@
+<% content_for :title, "Il mio account" %>
+
+<header class="page-head">
+  <div class="container">
+    <p class="kicker">Account</p>
+    <h1 class="page-head__title">I miei dati</h1>
+    <p class="page-head__lead">Qui puoi cambiare email e password.</p>
+  </div>
+</header>
+
+<section class="section container container--narrow">
+  <%= render "form", user: @user %>
+</section>

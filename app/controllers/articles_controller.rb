@@ -1,9 +1,11 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ show edit update destroy ]
+  # Chiunque può leggere; per scrivere, modificare o eliminare bisogna aver fatto il login.
+  before_action :authenticate, except: [:index, :show]
+  before_action :set_article, only: [:show]
 
   # GET /articles or /articles.json
   def index
-    @articles = Article.latest_first
+    @articles = Article.latest_first.includes(:categories)
   end
 
   # GET /articles/1 or /articles/1.json
@@ -17,11 +19,12 @@ class ArticlesController < ApplicationController
 
   # GET /articles/1/edit
   def edit
+    @article = current_user.articles.find(params[:id])   # solo i propri articoli
   end
 
   # POST /articles or /articles.json
   def create
-    @article = Article.new(article_params)
+    @article = current_user.articles.new(article_params)  # l'autore è sempre l'utente loggato
 
     respond_to do |format|
       if @article.save
@@ -36,6 +39,8 @@ class ArticlesController < ApplicationController
 
   # PATCH/PUT /articles/1 or /articles/1.json
   def update
+    @article = current_user.articles.find(params[:id])
+
     respond_to do |format|
       if @article.update(article_params)
         format.html { redirect_to @article, notice: "Modifiche salvate." }
@@ -49,6 +54,7 @@ class ArticlesController < ApplicationController
 
   # DELETE /articles/1 or /articles/1.json
   def destroy
+    @article = current_user.articles.find(params[:id])
     @article.destroy
 
     respond_to do |format|
@@ -58,13 +64,14 @@ class ArticlesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+    # Solo per `show`: le altre azioni cercano l'articolo tra quelli dell'utente loggato.
     def set_article
       @article = Article.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
+    # `category_ids: []` = un array di id (le checkbox delle categorie).
     def article_params
-      params.require(:article).permit(:title, :location, :excerpt, :body, :published_at)
+      params.require(:article).permit(:title, :location, :excerpt, :body, :published_at, category_ids: [])
     end
 end

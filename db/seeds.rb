@@ -79,9 +79,8 @@ articles = [
 
 articles.each do |attrs|
   article = Article.find_or_create_by!(title: attrs[:title]) do |a|
-    a.assign_attributes(attrs.except(:categories))
+    a.assign_attributes(attrs.except(:categories).merge(user: user))
   end
-  article.update!(user: user) if article.user.nil?
   article.categories = Category.where(name: attrs[:categories]) if article.categories.empty?
 end
 

@@ -8,13 +8,26 @@ class ArticleTest < ActiveSupport::TestCase
     assert_includes article.errors.full_messages, "Testo è obbligatorio"
   end
 
-  test "un articolo con titolo e testo è valido anche senza utente" do
-    assert Article.new(title: "Ciao", body: "Testo").valid?
+  test "un articolo con titolo, testo e autore è valido" do
+    assert Article.new(title: "Ciao", body: "Testo", user: users(:one)).valid?
+  end
+
+  test "senza autore non è valido (belongs_to è obbligatorio)" do
+    article = Article.new(title: "Ciao", body: "Testo")
+    assert_not article.valid?
+    assert_includes article.errors.full_messages, "Utente deve esistere"
+  end
+
+  test "owned_by? dice se l'articolo è di quell'utente" do
+    assert articles(:one).owned_by?(users(:one))
+    assert_not articles(:one).owned_by?(users(:two))
+    assert_not articles(:one).owned_by?(nil)
+    assert_not articles(:one).owned_by?("non un utente")
   end
 
   test "latest_first mette per primo l'articolo più recente" do
-    old = Article.create!(title: "Vecchio", body: "x", published_at: 2.days.ago)
-    new = Article.create!(title: "Nuovo", body: "x", published_at: 1.hour.ago)
+    old = Article.create!(title: "Vecchio", body: "x", published_at: 2.days.ago, user: users(:one))
+    new = Article.create!(title: "Nuovo", body: "x", published_at: 1.hour.ago, user: users(:one))
     assert_equal [new, old], Article.latest_first.where(id: [old.id, new.id]).to_a
   end
 
@@ -30,8 +43,8 @@ class ArticleTest < ActiveSupport::TestCase
   end
 
   test "recent contiene solo gli articoli dell'ultima settimana" do
-    nuovo = Article.create!(title: "Di oggi", body: "x", published_at: Time.zone.now)
-    vecchio = Article.create!(title: "Di un mese fa", body: "x", published_at: 1.month.ago)
+    nuovo = Article.create!(title: "Di oggi", body: "x", published_at: Time.zone.now, user: users(:one))
+    vecchio = Article.create!(title: "Di un mese fa", body: "x", published_at: 1.month.ago, user: users(:one))
     assert_includes Article.recent, nuovo
     assert_not_includes Article.recent, vecchio
   end

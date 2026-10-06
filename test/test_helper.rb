@@ -11,3 +11,10 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
 end
+
+class ActionDispatch::IntegrationTest
+  # Esegue il login vero (POST /session), come farebbe il form. Le fixture usano la password "secret".
+  def log_in_as(user, password: "secret")
+    post session_path, params: { email: user.email, password: password }
+  end
+end

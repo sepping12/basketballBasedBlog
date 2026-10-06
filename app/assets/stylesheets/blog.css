@@ -315,7 +315,7 @@ h1, h2, h3 { line-height: 1.1; margin: 0; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
 .form label { display: block; margin-bottom: .35rem; font-weight: 600; font-size: .9rem; }
-.form input[type="text"], .form input[type="datetime-local"], .form textarea {
+.form input[type="text"], .form input[type="password"], .form input[type="email"], .form input[type="datetime-local"], .form textarea {
   width: 100%; padding: .75rem .9rem;
   font: inherit; color: var(--ink);
   background: var(--paper); border: 2px solid var(--line); border-radius: 10px;
@@ -357,6 +357,50 @@ h1, h2, h3 { line-height: 1.1; margin: 0; }
 .footer__links a:hover { color: var(--orange); }
 .footer__copy { grid-column: 1 / -1; margin: 0; padding-top: 1.2rem; border-top: 1px solid rgba(255, 255, 255, .1); font-size: .85rem; }
 @media (max-width: 640px) { .footer__inner { grid-template-columns: 1fr; } }
+
+/* ---------- Avvisi di errore (flash alert) ---------- */
+.toast--alert { background: #3a1511; border-left-color: #ff6b5a; }
+
+/* ---------- Categorie: chip (lettura) e checkbox (form) ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 .7rem; }
+.chip {
+  display: inline-block; padding: .15rem .65rem;
+  font-size: .75rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--orange-dark); background: var(--orange-soft); border-radius: 999px;
+}
+.page-head .chip { color: var(--wood); background: rgba(233, 197, 143, .14); }
+.page-head .chips { margin-top: .9rem; }
+
+fieldset.field { border: 0; padding: 0; margin-inline: 0; min-width: 0; }
+fieldset.field legend { padding: 0; margin-bottom: .45rem; font-weight: 600; font-size: .9rem; }
+.checks { display: flex; flex-wrap: wrap; gap: .5rem; }
+.checks legend { width: 100%; }
+.form label.check {
+  display: inline-flex; align-items: center; gap: .45rem; margin: 0;
+  padding: .45rem .9rem; font-weight: 500; font-size: .9rem; cursor: pointer;
+  background: var(--paper); border: 2px solid var(--line); border-radius: 999px;
+  transition: border-color .15s ease, background .15s ease;
+}
+.form label.check:hover { border-color: var(--orange); }
+.form label.check:has(input:checked) { background: var(--orange-soft); border-color: var(--orange); }
+.check input { accent-color: var(--orange); width: 1rem; height: 1rem; margin: 0; }
+
+/* ---------- Commenti ---------- */
+.comments { margin: 1.4rem 0 2.4rem; display: grid; gap: 1rem; }
+.comments__empty { margin: 0; padding: 1.2rem; text-align: center; color: var(--muted); background: var(--card); border: 2px dashed var(--line); border-radius: var(--radius); }
+.comments__title { margin: 0 0 1rem; font: 400 1.9rem/1 var(--font-display); letter-spacing: .03em; text-transform: uppercase; }
+.comment { padding: 1rem 1.2rem; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--orange); border-radius: 10px; }
+.comment p { margin: .4rem 0 0; }
+.comment__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .9rem; }
+.comment__date, .comment__email { font-size: .82rem; color: var(--muted); }
+.comment__delete { margin-left: auto; font-size: .85rem; font-weight: 600; color: var(--danger); }
+
+/* Entrata in dissolvenza di un elemento aggiunto via Ajax (il libro lo fa con JavaScript; qui basta una regola CSS) */
+.fade-in { animation: fade-in .6s ease both; }
+@keyframes fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Note sotto i form ---------- */
+.form-note { margin: 1.2rem 0 0; text-align: center; color: var(--muted); font-size: .95rem; }
 
 /* ---------- Accessibilità ---------- */
 @media (prefers-reduced-motion: reduce) {

@@ -22,11 +22,4 @@ class CommentTest < ActiveSupport::TestCase
     end
     assert comment.persisted?
   end
-
-  test "il callback non fallisce se l'articolo non ha un autore" do
-    senza_autore = Article.create!(title: "Anonimo", body: "x", published_at: 1.day.ago)
-    assert_output("") do
-      assert senza_autore.comments.create(name: "A", email: "a@example.com", body: "x").persisted?
-    end
-  end
 end

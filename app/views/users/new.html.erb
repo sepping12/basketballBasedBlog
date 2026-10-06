@@ -1,0 +1,14 @@
+<% content_for :title, "Registrati" %>
+
+<header class="page-head">
+  <div class="container">
+    <p class="kicker">Benvenuto</p>
+    <h1 class="page-head__title">Crea il tuo account</h1>
+    <p class="page-head__lead">Con un account puoi scrivere e gestire i tuoi articoli.</p>
+  </div>
+</header>
+
+<section class="section container container--narrow">
+  <%= render "form", user: @user %>
+  <p class="form-note">Hai già un account? <%= link_to "Accedi", login_path %></p>
+</section>

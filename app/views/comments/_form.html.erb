@@ -1,0 +1,36 @@
+<%# Form per un nuovo commento. Uso: render "comments/form", article: @article, comment: @comment || Comment.new
+    form_with, per impostazione predefinita (Rails 6.0), invia via Ajax (data-remote="true").
+    `local: true` lo rende un invio normale: serve nella pagina "senza JavaScript" (comments/new.html.erb). %>
+<%= form_with(model: comment, url: article_comments_path(article), local: local_assigns.fetch(:local, false), class: "form") do |form| %>
+  <% if comment.errors.any? %>
+    <div id="error_explanation" role="alert">
+      <h2>Non posso salvare il commento: <%= pluralize(comment.errors.count, "problema", "problemi") %></h2>
+      <ul>
+        <% comment.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field-row">
+    <div class="field">
+      <%= form.label :name %>
+      <%= form.text_field :name, autocomplete: "name" %>
+    </div>
+    <div class="field">
+      <%= form.label :email %>
+      <%= form.text_field :email, autocomplete: "email" %>
+      <small>Non sarà mostrata pubblicamente.</small>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= form.label :body %>
+    <%= form.text_area :body, rows: 5 %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Invia il commento", class: "btn btn--primary" %>
+  </div>
+<% end %>
