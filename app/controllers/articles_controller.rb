@@ -5,7 +5,7 @@ class ArticlesController < ApplicationController
 
   # GET /articles or /articles.json
   def index
-    @articles = Article.latest_first.includes(:categories)
+    @articles = Article.latest_first.includes(:categories).with_attached_cover_image
   end
 
   # GET /articles/1 or /articles/1.json
@@ -71,7 +71,9 @@ class ArticlesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     # `category_ids: []` = un array di id (le checkbox delle categorie).
+    # `cover_image` = il file caricato; `remove_cover_image` = la checkbox "rimuovi l'immagine".
     def article_params
-      params.require(:article).permit(:title, :location, :excerpt, :body, :published_at, category_ids: [])
+      params.require(:article).permit(:title, :cover_image, :remove_cover_image, :location, :excerpt, :body,
+                                      :published_at, category_ids: [])
     end
 end

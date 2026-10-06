@@ -17,6 +17,7 @@ end
 articles = [
   {
     title: "Perché il pick and roll non passa mai di moda",
+    cover: "pick-and-roll.jpg",
     categories: %w[Tattica],
     location: "Milano",
     excerpt: "Un blocco, un taglio, una scelta: la giocata più semplice è ancora la più difficile da difendere.",
@@ -33,6 +34,7 @@ articles = [
   },
   {
     title: "Tre fondamentali da allenare ogni settimana",
+    cover: "fondamentali.jpg",
     categories: %w[Allenamento],
     location: "Bologna",
     excerpt: "Non serve un'ora di allenamento: bastano pochi minuti ben fatti, sempre sugli stessi gesti.",
@@ -49,6 +51,7 @@ articles = [
   },
   {
     title: "Il tiro da tre punti ha cambiato tutto",
+    cover: "tiro-da-tre.jpg",
     categories: %w[Storia Tattica],
     location: "Roma",
     excerpt: "Una linea sul parquet ha riscritto il modo di giocare: breve storia di un'idea rivoluzionaria.",
@@ -63,6 +66,7 @@ articles = [
   },
   {
     title: "L'ultimo quarto: come si legge una partita punto a punto",
+    cover: "ultimo-quarto.jpg",
     categories: %w[Tattica],
     location: "Torino",
     excerpt: "Quando il tabellone dice parità e il tempo scorre, contano le piccole cose.",
@@ -79,7 +83,12 @@ articles = [
 
 articles.each do |attrs|
   article = Article.find_or_create_by!(title: attrs[:title]) do |a|
-    a.assign_attributes(attrs.except(:categories).merge(user: user))
+    a.assign_attributes(attrs.except(:categories, :cover).merge(user: user))
+  end
+  # Copertina (immagine generata per l'esempio, in db/seeds/covers): solo se l'articolo non ne ha già una.
+  if attrs[:cover] && !article.cover_image.attached?
+    file = Rails.root.join("db/seeds/covers", attrs[:cover])
+    article.cover_image.attach(io: File.open(file), filename: attrs[:cover], content_type: "image/jpeg")
   end
   article.categories = Category.where(name: attrs[:categories]) if article.categories.empty?
 end

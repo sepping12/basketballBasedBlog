@@ -187,3 +187,127 @@ class ArticlesAccessControlTest < ActionDispatch::IntegrationTest
     assert Article.exists?(@article.id)
   end
 end
+
+# Capitolo 10: caricare, mostrare e rimuovere la copertina via web
+class ArticlesCoverControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @article = articles(:one)          # dell'utente one
+    log_in_as users(:one)
+  end
+
+  def upload(nome = "copertina.png", tipo = "image/png")
+    fixture_file_upload("files/#{nome}", tipo)      # in Rails 6.0 il percorso parte da test/fixtures
+  end
+
+  test "il form ha il campo file e invia in multipart" do
+    get new_article_url
+    assert_select "form[enctype='multipart/form-data']"
+    assert_select "input[type=file][name='article[cover_image]'][accept*='image/png']"
+  end
+
+  test "si crea un articolo con la copertina" do
+    assert_difference(["Article.count", "ActiveStorage::Blob.count"]) do
+      post articles_url, params: { article: { title: "Con foto", body: "Testo", cover_image: upload } }
+    end
+    article = Article.find_by!(title: "Con foto")
+    assert article.cover_image.attached?
+    assert_redirected_to article_url(article)
+  end
+
+  test "la pagina dell'articolo mostra la copertina grande (e subito, non lazy)" do
+    attach_cover(@article).save!
+    get article_url(@article)
+    assert_select "figure.cover-figure img.cover-img[loading=eager][alt='#{@article.title}']"
+    assert_select "figure.cover-figure img[src*='/rails/active_storage/representations/']"
+  end
+
+  test "elenco e home mostrano la copertina nelle schede; senza copertina c'è il pallone" do
+    attach_cover(@article).save!
+    get articles_url
+    assert_select ".card", count: Article.count
+    assert_select ".card__cover--photo img.cover-img[loading=lazy]", count: 1
+    assert_select ".card__cover:not(.card__cover--photo) svg.ball", count: Article.count - 1
+    get root_url
+    assert_select ".card__cover--photo img.cover-img", count: 1
+  end
+
+  test "la copertina non valida dà errore in italiano e non crea nulla" do
+    assert_no_difference(["Article.count", "ActiveStorage::Attachment.count"]) do
+      post articles_url, params: { article: { title: "x", body: "y", cover_image: upload("appunti.txt", "text/plain") } }
+    end
+    assert_response :unprocessable_entity
+    assert_select "#error_explanation li", text: "Copertina deve essere un'immagine JPEG, PNG, GIF o WebP"
+  end
+
+  test "il form di modifica mostra la miniatura attuale e la checkbox per rimuoverla" do
+    attach_cover(@article).save!
+    get edit_article_url(@article)
+    assert_select ".cover-current img[alt='Copertina attuale']"
+    assert_select ".cover-current input[type=checkbox][name='article[remove_cover_image]']"
+  end
+
+  test "senza copertina il form non mostra la checkbox di rimozione" do
+    get edit_article_url(@article)
+    assert_select ".cover-current", count: 0
+  end
+
+  test "spuntando 'Rimuovi questa immagine' la copertina viene eliminata" do
+    attach_cover(@article).save!
+    patch article_url(@article), params: { article: { remove_cover_image: "1" } }
+    assert_redirected_to article_url(@article)
+    assert_not @article.reload.cover_image.attached?
+  end
+
+  test "la checkbox non spuntata (valore 0) lascia la copertina" do
+    attach_cover(@article).save!
+    patch article_url(@article), params: { article: { title: "Nuovo titolo", remove_cover_image: "0" } }
+    assert @article.reload.cover_image.attached?
+  end
+
+  test "si può sostituire la copertina caricandone un'altra" do
+    attach_cover(@article).save!
+    patch article_url(@article), params: { article: { cover_image: upload("panoramica.jpg", "image/jpeg") } }
+    assert_equal "panoramica.jpg", @article.reload.cover_image.filename.to_s
+  end
+
+  test "modificando altri campi senza scegliere un file, la copertina resta" do
+    attach_cover(@article).save!
+    patch article_url(@article), params: { article: { title: "Solo il titolo" } }
+    assert @article.reload.cover_image.attached?
+  end
+
+  test "un altro utente non può cambiare la copertina di un articolo non suo" do
+    delete logout_path
+    log_in_as users(:two)
+    assert_raises(ActiveRecord::RecordNotFound) do
+      patch article_url(@article), params: { article: { cover_image: upload } }
+    end
+    assert_not @article.reload.cover_image.attached?
+  end
+
+  test "l'API JSON include l'indirizzo dell'immagine originale, solo se c'è" do
+    attach_cover(@article).save!
+    get articles_url(format: :json)
+    dati = JSON.parse(response.body)
+    con = dati.find { |a| a["id"] == @article.id }
+    senza = dati.find { |a| a["id"] != @article.id }
+    assert_match %r{\Ahttp://www.example.com/rails/active_storage/blobs/}, con["cover_image_url"]
+    assert_not senza.key?("cover_image_url")
+  end
+
+  test "la miniatura viene creata alla prima richiesta e restituisce un'immagine ridimensionata" do
+    skip "ImageMagick non installato" unless imagemagick_disponibile?
+    attach_cover(@article).save!
+    get article_url(@article)
+    url = css_select("figure.cover-figure img").first["src"]
+    get url                                   # la rappresentazione risponde con un redirect al file vero
+    assert_response :redirect
+    follow_redirect!
+    assert_response :success
+    assert_equal "image/png", response.media_type
+    img = MiniMagick::Image.read(response.body)
+    assert_operator img.width, :<=, 1200
+    assert_equal [600, 400], [img.width, img.height]       # l'originale è più piccolo del limite: non si ingrandisce
+  end
+end
+

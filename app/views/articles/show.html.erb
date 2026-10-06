@@ -21,6 +21,11 @@
 </header>
 
 <article class="section container container--narrow">
+  <% if @article.cover_image.attached? %>
+    <figure class="cover-figure">
+      <%= render "articles/cover", article: @article, variant: { resize_to_limit: [1200, 800] }, loading: "eager" %>
+    </figure>
+  <% end %>
   <div class="prose">
     <%= simple_format(@article.body) %>
   </div>

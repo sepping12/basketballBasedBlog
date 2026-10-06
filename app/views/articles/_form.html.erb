@@ -15,6 +15,21 @@
     <%= form.text_field :title, placeholder: "Es. Perché il pick and roll non passa mai di moda" %>
   </div>
 
+  <div class="field">
+    <%= form.label :cover_image %>
+    <%# file_field: form_with passa da solo a "multipart" (necessario per caricare file) %>
+    <%= form.file_field :cover_image, accept: Article::COVER_TYPES.join(",") %>
+    <small>JPEG, PNG, GIF o WebP, fino a <%= Article::COVER_MAX_SIZE / 1.megabyte %> MB.</small>
+    <% if article.persisted? && article.cover_image.attached? %>
+      <div class="cover-current">
+        <%= image_tag article.cover_image.variant(resize_to_fill: [96, 54]), alt: "Copertina attuale" %>
+        <%= form.label :remove_cover_image, class: "check" do %>
+          <%= form.check_box :remove_cover_image %> Rimuovi questa immagine
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="field-row">
     <div class="field">
       <%= form.label :location %>

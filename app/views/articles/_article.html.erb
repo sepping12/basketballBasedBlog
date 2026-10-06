@@ -1,8 +1,13 @@
 <%# Card di anteprima di un articolo. Per convenzione di Rails, `render @articles` (o `render @article`)
     cerca questo file (articles/_article) e crea da solo la variabile locale `article`. %>
 <article class="card">
-  <%= link_to article, class: "card__cover cover-#{article.id % 4}", tabindex: -1, "aria-hidden": true do %>
-    <%= render "shared/ball", size: 84 %>
+  <%= link_to article, class: "card__cover cover-#{article.id % 4}#{' card__cover--photo' if article.cover_image.attached?}",
+        tabindex: -1, "aria-hidden": true do %>
+    <% if article.cover_image.attached? %>
+      <%= render "articles/cover", article: article %>
+    <% else %>
+      <%= render "shared/ball", size: 84 %>   <%# senza copertina: il pallone di prima %>
+    <% end %>
   <% end %>
   <div class="card__body">
     <p class="card__meta">

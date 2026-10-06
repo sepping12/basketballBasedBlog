@@ -1,0 +1,11 @@
+<%# L'immagine di copertina di un articolo (se c'è). Si usa da più pagine, con dimensioni diverse:
+      render "articles/cover", article: @article                                                          → card (predefinito)
+      render "articles/cover", article: @article, variant: { resize_to_limit: [1200, 800] }, loading: "eager"  → pagina dell'articolo
+    local_assigns.fetch(:nome, predefinito) = "se la variabile locale è stata passata usala, altrimenti usa il predefinito".
+    `variant` NON è l'originale (che potrebbe pesare molti MB): è una copia ridimensionata, creata alla prima richiesta.
+    loading: "lazy" (predefinito) carica l'immagine solo quando sta per entrare nello schermo: bene per gli elenchi.
+    Per l'immagine principale, già visibile in cima alla pagina, si usa "eager" (subito). %>
+<% if article.cover_image.attached? %>
+  <%= image_tag article.cover_image.variant(local_assigns.fetch(:variant, { resize_to_fill: [640, 360] })),
+                alt: article.title, loading: local_assigns.fetch(:loading, "lazy"), class: "cover-img" %>
+<% end %>
